@@ -1,6 +1,6 @@
 import anywhere from '../assets/images/anywhere.png';
 import audi from '../assets/images/audi.png';
-import avatar from '../assets/images/avatar.png';
+import avatar from '../assets/images/avatar.jpeg';
 import bike from '../assets/images/bike.png';
 import bmw from '../assets/images/bmw.png';
 import book from '../assets/images/book.png';

@@ -20,8 +20,8 @@ const Location = () => {
 			<View>
 				<Image source={images.anywhere} resizeMode="contain" className="w-full" />
 				<View className="items-center">
-					<Text className="text-2xl font-medium">Anywhere you are</Text>
-					<Text className="text-sm font-medium text-center text-tertiary-400 w-[220px] mt-4">
+					<Text className="text-2xl font-poppins font-medium">Anywhere you are</Text>
+					<Text className="text-sm font-medium font-poppins text-center text-tertiary-400 w-[220px] mt-4">
 						Sell houses easily with the help of Listenoryx and to make this line big I am writing
 						more.
 					</Text>

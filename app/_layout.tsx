@@ -1,10 +1,28 @@
 import useAuhStore from '@/store/authStore';
+import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
+import { useEffect } from 'react';
 import 'react-native-gesture-handler';
 import '../global.css';
 
 export default function RootLayout() {
 	const { isLoggedIn } = useAuhStore();
+	const [fontsLoaded] = useFonts({
+		'Poppins-Regular': require('../assets/fonts/Poppins-Regular.ttf'),
+		'Poppins-Medium': require('../assets/fonts/Poppins-Medium.ttf'),
+		'Poppins-Bold': require('../assets/fonts/Poppins-Bold.ttf'),
+	});
+
+	useEffect(() => {
+		if (fontsLoaded) {
+			SplashScreen.hideAsync();
+		}
+	}, [fontsLoaded]);
+
+	if (!fontsLoaded) {
+		return null;
+	}
 
 	return (
 		<Stack>
