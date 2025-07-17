@@ -114,13 +114,13 @@ const Request = () => {
 							<Text className="text-tertiary-100 text-[10px]">
 								<Text className="text-sm">{bookedCar?.name}/</Text>per
 							</Text>
-							<Text>$200</Text>
+							<Text className="font-poppins">$200</Text>
 						</View>
 						<View className="mt-4 flex-row justify-between items-center">
 							<Text className="text-tertiary-100 text-[10px]">
 								<Text className="text-sm">VAT </Text>(5%)
 							</Text>
-							<Text>$20</Text>
+							<Text className="font-poppins">$20</Text>
 						</View>
 					</View>
 				) : (

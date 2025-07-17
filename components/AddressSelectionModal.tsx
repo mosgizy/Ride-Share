@@ -78,7 +78,7 @@ const AddressSelectionModal = () => {
 								/>
 							</View>
 							<View className="px-5 pt-5 pb-10 text-tertiary-100 font-medium">
-								<Text>Recent Places</Text>
+								<Text className="font-poppins">Recent Places</Text>
 								<View className="my-2 gap-3">
 									{recentPlaces.length === 0 ? (
 										<Text className="text-lg font-medium text-primary-100 text-center">

@@ -74,7 +74,7 @@ const Profile = () => {
 			<Text className="text-tertiary-100 text-center text-[28px] mt-6">{profile?.name}</Text>
 			<View className="mt-6 gap-6">
 				<View className="border border-secondary-400 px-5 py-5 rounded-lg text-secondary-600">
-					<Text>{profile?.email}</Text>
+					<Text className="font-poppins">{profile?.email}</Text>
 				</View>
 				<PhoneNumberInput
 					country={profile?.phoneNumber.countryCode}
@@ -117,7 +117,9 @@ const Profile = () => {
 					</TouchableOpacity>
 				</Modal>
 				<View className="border border-secondary-400 px-5 py-5 rounded-lg text-secondary-600">
-					<Text>{profile?.city ? `${profile?.street}, ${profile?.city}` : 'Address'}</Text>
+					<Text className="font-poppins">
+						{profile?.city ? `${profile?.street}, ${profile?.city}` : 'Address'}
+					</Text>
 				</View>
 			</View>
 			<SecondaryBtn fn={logout} text="Logout" additionalStyle="mt-auto" />

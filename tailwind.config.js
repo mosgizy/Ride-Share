@@ -6,6 +6,9 @@ module.exports = {
 		extend: {
 			fontFamily: {
 				poppins: ['Poppins-Regular'],
+				medium: ['Poppins-Medium'],
+				bold: ['Poppins-Bold'],
+				'semi-bold': ['Poppins-Semibold'],
 			},
 			colors: {
 				primary: {

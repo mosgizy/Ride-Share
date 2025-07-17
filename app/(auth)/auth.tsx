@@ -44,7 +44,7 @@ const Auth = () => {
 				<View className="absolute inset-0 bg-primary-100/60 justify-center items-center px-8">
 					<View className="bg-white rounded-3xl px-8 py-14 items-center min-w-[90%]">
 						<Image source={icons.locator} resizeMode="contain" className="w-[110px] h-[110px]" />
-						<View className="w-[55%]">
+						<View className="w-[60%]">
 							<Text className="text-center font-medium text-2xl text-primary-100">
 								Enable your location
 							</Text>
