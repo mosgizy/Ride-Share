@@ -5,6 +5,7 @@ import { icons, images } from '@/constants';
 import useAuhStore from '@/store/authStore';
 import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { useCallback, useState } from 'react';
 import { Image, Modal, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -123,6 +124,7 @@ const Profile = () => {
 				</View>
 			</View>
 			<SecondaryBtn fn={logout} text="Logout" additionalStyle="mt-auto" />
+			<StatusBar style="dark" />
 		</SafeAreaView>
 	);
 };

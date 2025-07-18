@@ -3,6 +3,7 @@ import SecondaryBtn from '@/components/SecondayBtn';
 import { icons } from '@/constants';
 import { transactions } from '@/lib/transactions';
 import { router } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { FlatList, Image, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -56,6 +57,7 @@ const Wallet = () => {
 					)}
 				/>
 			</View>
+			<StatusBar style="dark" />
 		</SafeAreaView>
 	);
 };

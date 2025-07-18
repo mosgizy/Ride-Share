@@ -3,6 +3,7 @@ import LocationScreenConfirm from '@/components/LocationScreenConfirm';
 import Sidebar from '@/components/Sidebar';
 import { icons } from '@/constants';
 import { Tabs } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { ColorValue, Image, ImageSourcePropType, Text, View } from 'react-native';
 
 interface TabIconI {
@@ -111,6 +112,7 @@ const Pages = () => {
 			<Sidebar />
 			<AddressSelectionModal />
 			<LocationScreenConfirm />
+			<StatusBar style="dark" />
 		</>
 	);
 };

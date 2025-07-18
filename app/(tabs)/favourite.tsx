@@ -1,5 +1,6 @@
 import NavBar from '@/components/NavBar';
 import { icons } from '@/constants';
+import { StatusBar } from 'expo-status-bar';
 import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -39,6 +40,7 @@ const Favourite = () => {
 					</View>
 				</View>
 			</ScrollView>
+			<StatusBar style="dark" />
 		</SafeAreaView>
 	);
 };

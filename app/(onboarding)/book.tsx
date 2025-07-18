@@ -1,6 +1,6 @@
 import CircularProgress from '@/components/ProgressBar';
 import { images } from '@/constants';
-import { RelativePathString, router } from 'expo-router';
+import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -30,7 +30,7 @@ const Book = () => {
 			<View className="mt-auto mb-20 w-full items-center">
 				<CircularProgress percent={100} link={'/(auth)'} end />
 			</View>
-			<StatusBar style="dark" />
+			{/* <StatusBar style="dark" /> */}
 		</SafeAreaView>
 	);
 };

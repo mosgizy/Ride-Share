@@ -8,7 +8,7 @@ const Home = () => {
 		<SafeAreaView className="relative h-full px-5">
 			<NavBar noNotification />
 			<LiveLocationMap />
-			<StatusBar style="dark" translucent />
+			<StatusBar style="dark" />
 		</SafeAreaView>
 	);
 };

@@ -2,6 +2,7 @@ import GoBack from '@/components/GoBack';
 import PhoneInputWithDropdown from '@/components/PhoneNumberInput';
 import PrimaryBtn from '@/components/PrimaryBtn';
 import useAuhStore from '@/store/authStore';
+import { StatusBar } from 'expo-status-bar';
 import { useCallback, useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -74,6 +75,7 @@ const ContactUs = () => {
 				</View>
 			</View>
 			<PrimaryBtn text="Send Message" fn={() => {}} additionalStyle="mt-auto mb-8" />
+			<StatusBar style="dark" />
 		</SafeAreaView>
 	);
 };

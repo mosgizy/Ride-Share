@@ -30,7 +30,7 @@ const Location = () => {
 			<View className="relative mt-auto mb-20 w-full items-center">
 				<CircularProgress percent={33.3} link={'/time'} />
 			</View>
-			<StatusBar style="dark" />
+			{/* <StatusBar style="dark" /> */}
 		</SafeAreaView>
 	);
 };

@@ -1,4 +1,5 @@
 import GoBack from '@/components/GoBack';
+import { StatusBar } from 'expo-status-bar';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -23,6 +24,7 @@ const DeleteAccount = () => {
 			>
 				<Text className="text-white font-medium">Delete</Text>
 			</TouchableOpacity>
+			<StatusBar style="dark" />
 		</SafeAreaView>
 	);
 };

@@ -1,4 +1,5 @@
 import GoBack from '@/components/GoBack';
+import { StatusBar } from 'expo-status-bar';
 import { Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -21,6 +22,7 @@ const About = () => {
 					more important posts on my Website for all of you. Please give your support and love.
 				</Text>
 			</View>
+			<StatusBar style="dark" />
 		</SafeAreaView>
 	);
 };

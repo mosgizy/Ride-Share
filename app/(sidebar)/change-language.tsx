@@ -1,6 +1,7 @@
 import GoBack from '@/components/GoBack';
 import LanguageSelect from '@/components/LanguageSelect';
 import { languages } from '@/lib/languages';
+import { StatusBar } from 'expo-status-bar';
 import { FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -15,6 +16,7 @@ const ChangeLanguage = () => {
 					<LanguageSelect country={item.country} icon={item.icon} language={item.language} />
 				)}
 			/>
+			<StatusBar style="dark" />
 		</SafeAreaView>
 	);
 };

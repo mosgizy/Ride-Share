@@ -30,7 +30,7 @@ const Time = () => {
 			<View className="relative mt-auto mb-20 w-full items-center">
 				<CircularProgress percent={66.6} link={'/book'} />
 			</View>
-			<StatusBar style="dark" />
+			{/* <StatusBar style="dark" /> */}
 		</SafeAreaView>
 	);
 };

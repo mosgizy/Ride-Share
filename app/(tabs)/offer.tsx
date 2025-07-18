@@ -1,5 +1,6 @@
 import NavBar from '@/components/NavBar';
 import PrimaryBtn from '@/components/PrimaryBtn';
+import { StatusBar } from 'expo-status-bar';
 import { ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -30,6 +31,7 @@ const Offer = () => {
 					<PrimaryBtn text="Collect" fn={() => {}} additionalStyle="!py-4 !px-12" />
 				</View>
 			</ScrollView>
+			<StatusBar style="dark" />
 		</SafeAreaView>
 	);
 };

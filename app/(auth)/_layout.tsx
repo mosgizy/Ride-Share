@@ -1,4 +1,5 @@
 import { Stack } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 
 const Auth = () => {
 	return (
@@ -13,6 +14,7 @@ const Auth = () => {
 				<Stack.Screen name="profile" options={{ headerShown: false }} />
 				<Stack.Screen name="forget-password" options={{ headerShown: false }} />
 			</Stack>
+			<StatusBar style="dark" />
 		</>
 	);
 };
