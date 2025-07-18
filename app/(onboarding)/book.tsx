@@ -11,7 +11,7 @@ const Book = () => {
 			<View className="items-end w-full py-9">
 				<TouchableOpacity
 					activeOpacity={0.75}
-					onPress={() => router.push('/auth' as RelativePathString)}
+					onPress={() => router.push('/(auth)')}
 					className="flex-wrap"
 				>
 					<Text className="text-lg text-primary-100 font-regular">Skip</Text>
@@ -28,9 +28,9 @@ const Book = () => {
 				</View>
 			</View>
 			<View className="mt-auto mb-20 w-full items-center">
-				<CircularProgress percent={100} link={'/auth'} end />
+				<CircularProgress percent={100} link={'/(auth)'} end />
 			</View>
-			<StatusBar style="dark" translucent />
+			<StatusBar style="dark" />
 		</SafeAreaView>
 	);
 };

@@ -11,7 +11,7 @@ const Time = () => {
 			<View className="items-end w-full py-9">
 				<TouchableOpacity
 					activeOpacity={0.75}
-					onPress={() => router.push('/auth')}
+					onPress={() => router.push('/(auth)')}
 					className="flex-wrap"
 				>
 					<Text className="text-lg text-primary-100 font-regular">Skip</Text>
@@ -30,7 +30,7 @@ const Time = () => {
 			<View className="relative mt-auto mb-20 w-full items-center">
 				<CircularProgress percent={66.6} link={'/book'} />
 			</View>
-			<StatusBar style="dark" translucent />
+			<StatusBar style="dark" />
 		</SafeAreaView>
 	);
 };

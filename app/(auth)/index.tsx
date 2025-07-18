@@ -69,7 +69,7 @@ const Auth = () => {
 					</View>
 				</View>
 			</ImageBackground>
-			<StatusBar style="dark" translucent />
+			<StatusBar style="dark" />
 		</SafeAreaView>
 	);
 };

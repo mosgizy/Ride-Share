@@ -37,7 +37,7 @@ const Profile = () => {
 				{
 					params: { countrycode: profile?.phoneNumber.countryCode },
 					headers: {
-						'X-RapidAPI-Key': 'dc89a98a14msh998a210cca4ebe2p1637d9jsne91b67d808ae',
+						'X-RapidAPI-Key': process.env.EXPO_PUBLIC_STATE_KEY,
 						'X-RapidAPI-Host': 'country-state-city-search-rest-api.p.rapidapi.com',
 					},
 				}
