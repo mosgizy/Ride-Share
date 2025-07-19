@@ -5,7 +5,7 @@ import * as Location from 'expo-location';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Image, ImageBackground, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, ImageBackground, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Auth = () => {
@@ -18,12 +18,9 @@ const Auth = () => {
 			setLocationPermission(status === 'granted' ? true : false);
 
 			if (status === 'granted') {
-				console.log('Location permission granted');
 				handleSkip();
 			} else {
-				console.log('Location permission denied');
-				router.push('/welcome');
-				handleSkip();
+				Alert.alert('please grant permission for location');
 			}
 		} catch (err) {
 			console.warn(err);

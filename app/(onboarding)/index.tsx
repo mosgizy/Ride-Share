@@ -1,7 +1,6 @@
 import CircularProgress from '@/components/ProgressBar';
 import { images } from '@/constants';
 import { router } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -11,7 +10,7 @@ const Location = () => {
 			<View className="items-end w-full py-9">
 				<TouchableOpacity
 					activeOpacity={0.75}
-					onPress={() => router.push('/(auth)')}
+					onPress={() => router.replace('/(auth)/auth')}
 					className="flex-wrap"
 				>
 					<Text className="text-lg text-primary-100 font-regular">Skip</Text>
@@ -30,7 +29,6 @@ const Location = () => {
 			<View className="relative mt-auto mb-20 w-full items-center">
 				<CircularProgress percent={33.3} link={'/time'} />
 			</View>
-			{/* <StatusBar style="dark" /> */}
 		</SafeAreaView>
 	);
 };

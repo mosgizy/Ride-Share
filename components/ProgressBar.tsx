@@ -20,7 +20,7 @@ const CircularProgress = ({
 				width={6}
 				fill={percent}
 				tintColor="#08B783"
-				onAnimationComplete={() => console.log('onAnimationComplete')}
+				onAnimationComplete={() => {}}
 				backgroundColor="#B9E5D1"
 			/>
 			<TouchableOpacity

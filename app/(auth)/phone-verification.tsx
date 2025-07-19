@@ -4,25 +4,28 @@ import useAuhStore from '@/store/authStore';
 import { useNavigationState } from '@react-navigation/native';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const PhoneVerification = () => {
 	const numInputs = 5;
-	const [values, setValues] = useState(Array(numInputs).fill(''));
-	const inputs = useRef<TextInput[]>([]);
 	const { setIsLoggedIn } = useAuhStore();
 
-	const handleChange = (text: string, index: number) => {
-		const newValues = [...values];
-		newValues[index] = text;
-		setValues(newValues);
+	const [values, setValues] = useState(Array(numInputs).fill(''));
+	const inputs = useRef<TextInput[]>([]);
+
+	const handleChange = useCallback((text: string, index: number) => {
+		setValues((prevValues) => {
+			const newValues = [...prevValues];
+			newValues[index] = text;
+			return newValues;
+		});
 
 		if (text && index < numInputs - 1) {
 			inputs.current[index + 1]?.focus();
 		}
-	};
+	}, []);
 
 	const previousRoute = useNavigationState((state) => {
 		const currentIndex = state.index;

@@ -11,7 +11,7 @@ import { Image, Modal, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Profile = () => {
-	const { profile, setIsLoggedIn, setProfile } = useAuhStore();
+	const { profile, setIsLoggedIn, setProfile, logoutUser } = useAuhStore();
 
 	const [form, setForm] = useState({
 		name: profile?.name,
@@ -48,6 +48,7 @@ const Profile = () => {
 
 	const logout = () => {
 		setIsLoggedIn(false);
+		logoutUser();
 		router.push('/(auth)/login');
 	};
 

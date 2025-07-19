@@ -6,6 +6,7 @@ export interface AuthStore{
   languageSelected: string;
   setLanguageSelected:(language:string) => void
   setIsLoggedIn: (status: boolean) => void;
+  logoutUser: () => void;
   setProfile:(profile:Profile) => void
 }
 

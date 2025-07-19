@@ -9,7 +9,8 @@ const useAuhStore = create<AuthStore>()(
       isLoggedIn: false,
       profile: null,
       languageSelected: "english",
-      setLanguageSelected:(language) => set({languageSelected:language}),
+      setLanguageSelected: (language) => set({ languageSelected: language }),
+      logoutUser:() => set({isLoggedIn:false,profile:null}),
       setIsLoggedIn: (status) => set(() => ({isLoggedIn:status})),
       setProfile: (profile) => set(() => ({profile}))
     })),

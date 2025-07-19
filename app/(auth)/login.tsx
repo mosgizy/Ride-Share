@@ -2,6 +2,7 @@ import GoBack from '@/components/GoBack';
 import PrimaryBtn from '@/components/PrimaryBtn';
 import TertiaryBtn from '@/components/TertiaryBtn';
 import { icons } from '@/constants';
+import useAuhStore from '@/store/authStore';
 import { Link, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
@@ -14,6 +15,21 @@ const Login = () => {
 		password: '',
 	});
 	const [showPassword, setShowPassword] = useState(false);
+
+	const { setProfile } = useAuhStore();
+
+	const logIn = () => {
+		setProfile({
+			city: 'Apapa',
+			email: 'asterisk@gmail.com',
+			image: null,
+			name: 'asterisk',
+			phoneNumber: { countryCode: 'NG', number: '8127365456' },
+			street: 'we live where ever we want',
+		});
+
+		router.push('/phone-verification');
+	};
 
 	return (
 		<SafeAreaView className="h-full px-5">
@@ -55,11 +71,7 @@ const Login = () => {
 					>
 						<Text className="font-medium text-sm text-secondary-300">Forget password?</Text>
 					</TouchableOpacity>
-					<PrimaryBtn
-						fn={() => router.push('/phone-verification')}
-						text="Sign In"
-						additionalStyle="mt-8"
-					/>
+					<PrimaryBtn fn={logIn} text="Sign In" additionalStyle="mt-8" />
 					<View className="flex-row items-center gap-2 mt-4">
 						<View className="flex-1 h-px bg-secondary-400" />
 						<Text className="text-secondary-400 font-medium">or</Text>
