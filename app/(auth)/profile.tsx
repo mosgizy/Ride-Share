@@ -114,7 +114,7 @@ const Profile = () => {
 			terms: profile.terms,
 		};
 
-		const { error: uploadErr, status } = await saveUserProfile(profileInfo);
+		const { error, status } = await saveUserProfile(profileInfo);
 
 		if (!status) return;
 
