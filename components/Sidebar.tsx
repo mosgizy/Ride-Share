@@ -15,11 +15,12 @@ const MenuItems = ({
 	text: string;
 }) => {
 	const { setSideBarModal } = useMapStore();
-	const { setIsLoggedIn } = useAuhStore();
+	const { setIsLoggedIn, logoutUser } = useAuhStore();
 
 	const handleLink = () => {
 		if (text === 'logout') {
 			setIsLoggedIn(false);
+			logoutUser();
 			router.push('/(auth)/login');
 			return;
 		}
@@ -41,48 +42,53 @@ const MenuItems = ({
 	);
 };
 
+const sideBarItems = [
+	{
+		url: '/(sidebar)/history',
+		icon: icons.history,
+		text: 'history',
+	},
+	{
+		url: '/(sidebar)/complain',
+		icon: icons.complain,
+		text: 'complain',
+	},
+	{
+		url: '/(sidebar)/referral',
+		icon: icons.referral,
+		text: 'referral',
+	},
+	{
+		url: '/(sidebar)/about',
+		icon: icons.about,
+		text: 'about us',
+	},
+	{
+		url: '/(sidebar)/settings',
+		icon: icons.settings,
+		text: 'settings',
+	},
+	{
+		url: '/(sidebar)/help',
+		icon: icons.help,
+		text: 'help and support',
+	},
+	{
+		url: '',
+		icon: icons.logout,
+		text: 'logout',
+	},
+];
+
 const SideBar = () => {
 	const slideAnim = useRef(new Animated.Value(-250)).current;
 	const { sideBarModal, setSideBarModal } = useMapStore();
 	const { profile } = useAuhStore();
 
-	const sideBarItems = [
-		{
-			url: '/(sidebar)/history',
-			icon: icons.history,
-			text: 'history',
-		},
-		{
-			url: '/(sidebar)/complain',
-			icon: icons.complain,
-			text: 'complain',
-		},
-		{
-			url: '/(sidebar)/referral',
-			icon: icons.referral,
-			text: 'referral',
-		},
-		{
-			url: '/(sidebar)/about',
-			icon: icons.about,
-			text: 'about us',
-		},
-		{
-			url: '/(sidebar)/settings',
-			icon: icons.settings,
-			text: 'settings',
-		},
-		{
-			url: '/(sidebar)/help',
-			icon: icons.help,
-			text: 'help and support',
-		},
-		{
-			url: '/(sidebar)/history',
-			icon: icons.logout,
-			text: 'logout',
-		},
-	];
+	const handleProfileClick = () => {
+		router.replace('/(tabs)/profile');
+		setSideBarModal(false);
+	};
 
 	useEffect(() => {
 		Animated.timing(slideAnim, {
@@ -124,13 +130,16 @@ const SideBar = () => {
 					</TouchableOpacity>
 				</View>
 				<View className="px-5">
-					<View className="w-[70px] h-[70px] rounded-full border border-primary overflow-hidden">
+					<TouchableOpacity
+						onPress={handleProfileClick}
+						className="w-[70px] h-[70px] rounded-full border border-primary overflow-hidden"
+					>
 						<Image
-							source={profile?.image !== null ? { uri: profile?.image?.uri } : images.profile}
+							source={profile?.image !== null ? { uri: profile?.image } : images.profile}
 							resizeMode="cover"
 							className="w-[70px] h-[70px] rounded-full"
 						/>
-					</View>
+					</TouchableOpacity>
 					<Text className="text-primary-100 text-lg uppercase font-medium mt-4">
 						{profile?.name}
 					</Text>

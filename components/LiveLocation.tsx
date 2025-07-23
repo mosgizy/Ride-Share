@@ -122,7 +122,7 @@ const LiveMap = () => {
 			{location ? (
 				<MapView
 					ref={mapRef}
-					style={{ width: '100%', height: '100%' }}
+					style={{ width: '100%', height: '100%', flex: 1 }}
 					region={location}
 					showsUserLocation={false}
 					showsMyLocationButton={false}

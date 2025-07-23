@@ -1,13 +1,24 @@
+import { supabase } from '@/lib/supabase';
 import useAuhStore from '@/store/authStore';
+import { Session } from '@supabase/supabase-js';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
+import { AppState } from 'react-native';
 import 'react-native-gesture-handler';
 import '../global.css';
 
+AppState.addEventListener('change', (state) => {
+	if (state === 'active') {
+		supabase.auth.startAutoRefresh();
+	} else {
+		supabase.auth.stopAutoRefresh();
+	}
+});
+
 export default function RootLayout() {
-	const { isLoggedIn } = useAuhStore();
+	const { isLoggedIn, setSession, setIsLoggedIn, setProfile, session } = useAuhStore();
 	const [fontsLoaded] = useFonts({
 		'Poppins-Regular': require('../assets/fonts/Poppins-Regular.ttf'),
 		'Poppins-Medium': require('../assets/fonts/Poppins-Medium.ttf'),
@@ -20,6 +31,19 @@ export default function RootLayout() {
 			SplashScreen.hideAsync();
 		}
 	}, [fontsLoaded]);
+
+	useEffect(() => {
+		const { data } = supabase.auth.onAuthStateChange(async (event, session) => {
+			if (session) {
+				setSession(session);
+				setIsLoggedIn(true);
+			}
+		});
+
+		return () => {
+			data.subscription.unsubscribe();
+		};
+	}, []);
 
 	if (!fontsLoaded) {
 		return null;

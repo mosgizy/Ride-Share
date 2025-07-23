@@ -2,12 +2,21 @@ import GoBack from '@/components/GoBack';
 import PrimaryBtn from '@/components/PrimaryBtn';
 import TertiaryBtn from '@/components/TertiaryBtn';
 import { icons } from '@/constants';
+import { supabase } from '@/lib/supabase';
 import useAuhStore from '@/store/authStore';
 import { Link, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, AppState, Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+AppState.addEventListener('change', (state) => {
+	if (state === 'active') {
+		supabase.auth.startAutoRefresh();
+	} else {
+		supabase.auth.stopAutoRefresh();
+	}
+});
 
 const Login = () => {
 	const [form, setForm] = useState({
@@ -15,19 +24,20 @@ const Login = () => {
 		password: '',
 	});
 	const [showPassword, setShowPassword] = useState(false);
+	const [loading, setLoading] = useState(false);
 
-	const { setProfile } = useAuhStore();
-
-	const logIn = () => {
-		setProfile({
-			city: 'Apapa',
-			email: 'asterisk@gmail.com',
-			image: null,
-			name: 'asterisk',
-			phoneNumber: { countryCode: 'NG', number: '8127365456' },
-			street: 'we live where ever we want',
+	const signIn = async () => {
+		setLoading(true);
+		const { error } = await supabase.auth.signInWithPassword({
+			email: form.emailorPhone,
+			password: form.password,
 		});
 
+		if (error) {
+			Alert.alert(error.message);
+			setLoading(false);
+			return;
+		}
 		router.push('/phone-verification');
 	};
 
@@ -54,6 +64,7 @@ const Login = () => {
 								placeholder="Enter Your Password"
 								placeholderTextColor={'#D0D0D0'}
 								secureTextEntry={!showPassword}
+								autoCapitalize={'none'}
 								className="flex-1"
 							/>
 							<TouchableOpacity
@@ -71,7 +82,7 @@ const Login = () => {
 					>
 						<Text className="font-medium text-sm text-secondary-300">Forget password?</Text>
 					</TouchableOpacity>
-					<PrimaryBtn fn={logIn} text="Sign In" additionalStyle="mt-8" />
+					<PrimaryBtn fn={signIn} text="Sign In" additionalStyle="mt-8" />
 					<View className="flex-row items-center gap-2 mt-4">
 						<View className="flex-1 h-px bg-secondary-400" />
 						<Text className="text-secondary-400 font-medium">or</Text>

@@ -1,16 +1,18 @@
+import LoadingPage from '@/components/LoadingPage';
 import { icons, images } from '@/constants';
-import useAuhStore from '@/store/authStore';
+import useGetUserData from '@/hooks/getUserData';
 import useMapStore from '@/store/store';
 import * as Location from 'expo-location';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, Image, ImageBackground, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Auth = () => {
 	const { setLocationPermission } = useMapStore();
-	const { isLoggedIn } = useAuhStore();
+	const { status: userData } = useGetUserData();
+	const [permission, setPermission] = useState(false);
 
 	const requestLocationPermission = async () => {
 		try {
@@ -18,7 +20,7 @@ const Auth = () => {
 			setLocationPermission(status === 'granted' ? true : false);
 
 			if (status === 'granted') {
-				handleSkip();
+				setPermission(true);
 			} else {
 				Alert.alert('please grant permission for location');
 			}
@@ -27,13 +29,30 @@ const Auth = () => {
 		}
 	};
 
-	const handleSkip = () => {
-		if (isLoggedIn) {
-			router.push('/home');
-		} else {
+	const route = () => {
+		if (userData.status === true) {
+			router.replace('/home');
+		}
+
+		if (userData.status === false) {
 			router.push('/welcome');
 		}
 	};
+
+	const handleSkip = () => {
+		setPermission(true);
+		route();
+	};
+
+	useEffect(() => {
+		if (permission) {
+			handleSkip();
+		}
+	}, [userData.status, permission]);
+
+	if (userData.status === null && permission) {
+		return <LoadingPage />;
+	}
 
 	return (
 		<SafeAreaView className="h-full">

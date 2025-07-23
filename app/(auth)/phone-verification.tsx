@@ -1,5 +1,7 @@
 import GoBack from '@/components/GoBack';
+import LoadingPage from '@/components/LoadingPage';
 import PrimaryBtn from '@/components/PrimaryBtn';
+import useGetUserData from '@/hooks/getUserData';
 import useAuhStore from '@/store/authStore';
 import { useNavigationState } from '@react-navigation/native';
 import { router } from 'expo-router';
@@ -10,7 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 const PhoneVerification = () => {
 	const numInputs = 5;
-	const { setIsLoggedIn } = useAuhStore();
+	const { setIsLoggedIn, session } = useAuhStore();
 
 	const [values, setValues] = useState(Array(numInputs).fill(''));
 	const inputs = useRef<TextInput[]>([]);
@@ -35,9 +37,18 @@ const PhoneVerification = () => {
 	});
 
 	const handleVerify = () => {
+		if (!session && previousRoute !== 'register') {
+			return;
+		}
 		setIsLoggedIn(true);
 		router.push(previousRoute === 'register' ? '/set-password' : '/home');
 	};
+
+	const userData = useGetUserData();
+
+	if (!userData.status) {
+		return <LoadingPage />;
+	}
 
 	return (
 		<SafeAreaView className="h-full px-5">
@@ -51,7 +62,9 @@ const PhoneVerification = () => {
 					{values.map((value, index) => (
 						<TextInput
 							key={index}
-							ref={(ref) => (inputs.current[index] = ref!)}
+							ref={(ref) => {
+								if (ref) inputs.current[index] = ref;
+							}}
 							value={value}
 							maxLength={1}
 							onChangeText={(text) => handleChange(text, index)}

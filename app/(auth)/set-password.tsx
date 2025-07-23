@@ -1,10 +1,12 @@
 import GoBack from '@/components/GoBack';
 import PrimaryBtn from '@/components/PrimaryBtn';
 import { icons } from '@/constants';
+import { supabase } from '@/lib/supabase';
+import useAuhStore from '@/store/authStore';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
-import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const SetPassword = () => {
@@ -13,6 +15,39 @@ const SetPassword = () => {
 
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+	const { setSession, profile } = useAuhStore();
+
+	const handleRegistration = async () => {
+		if (profile?.email === '' || password !== confirmPassword) {
+			Alert.alert('Please check password');
+			return;
+		}
+		const {
+			data: { session },
+			error,
+		} = await supabase.auth.signUp({
+			email: profile.email,
+			password: password,
+			options: {
+				data: {
+					phoneNumber: `${profile.phoneNumber.numberCode} ${profile.phoneNumber.number}`,
+					gender: profile.gender,
+				},
+			},
+		});
+
+		if (error) {
+			Alert.alert(error.message);
+			return;
+		}
+
+		if (!session) Alert.alert('please check your inbox for email verification');
+
+		setSession(session);
+
+		router.push('/profile');
+	};
 
 	return (
 		<SafeAreaView className="h-full px-5">
@@ -55,11 +90,7 @@ const SetPassword = () => {
 			<Text className="text-tertiary-500 text-sm font-semibold mt-2">
 				Atleast 1 number or a special character
 			</Text>
-			<PrimaryBtn
-				fn={() => router.push('/profile')}
-				text="Register"
-				additionalStyle="mt-auto mb-20"
-			/>
+			<PrimaryBtn fn={handleRegistration} text="Register" additionalStyle="mt-auto mb-20" />
 			<StatusBar style="dark" translucent />
 		</SafeAreaView>
 	);

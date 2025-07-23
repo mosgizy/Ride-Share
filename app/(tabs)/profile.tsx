@@ -2,16 +2,20 @@ import NavBar from '@/components/NavBar';
 import PhoneNumberInput from '@/components/PhoneNumberInput';
 import SecondaryBtn from '@/components/SecondayBtn';
 import { icons, images } from '@/constants';
+import { imagePicker } from '@/helper/imagePicker';
+import { uploadAvatar } from '@/helper/uploadAvatar';
+import { supabase } from '@/lib/supabase';
 import useAuhStore from '@/store/authStore';
-import * as ImagePicker from 'expo-image-picker';
+import useMapStore from '@/store/store';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Image, Modal, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Profile = () => {
 	const { profile, setIsLoggedIn, setProfile, logoutUser } = useAuhStore();
+	const { avatarPath, setAvatarPath } = useMapStore();
 
 	const [form, setForm] = useState({
 		name: profile?.name,
@@ -29,17 +33,50 @@ const Profile = () => {
 		setModal(false);
 	};
 
-	const openPicker = async () => {
-		const result = await ImagePicker.launchImageLibraryAsync({
-			mediaTypes: ['images'],
-			aspect: [4, 3],
-			quality: 1,
-		});
+	const [image, setImage] = useState<string>(profile.image as string);
 
-		if (!result.canceled) {
-			setForm({ ...form, image: result.assets[0] });
-			setProfile({ ...profile, image: result.assets[0] });
+	const openPicker = async () => {
+		const imageUrl = await imagePicker();
+
+		if (!imageUrl) return;
+		const {
+			data: { user },
+		} = await supabase.auth.getUser();
+
+		const { error, path } = await uploadAvatar(imageUrl?.uri, user!.id);
+
+		if (path && path !== avatarPath) {
+			setAvatarPath(path);
 		}
+
+		if (error) {
+			console.log(error);
+			return;
+		}
+
+		supabase.storage
+			.from('avatars')
+			.download(path as string)
+			.then(({ data }) => {
+				const fr = new FileReader();
+				fr.readAsDataURL(data!);
+				fr.onload = () => {
+					setImage(fr.result as string);
+				};
+			});
+
+		await supabase.storage.from('avatars').remove([avatarPath]);
+	};
+
+	const uploadImageToUser = async (imageUrl: string, email: string) => {
+		const { error } = await supabase
+			.from('users')
+			.update({ avatar_url: imageUrl })
+			.eq('email', email);
+
+		if (error) return { status: false, error };
+
+		return { status: true, error };
 	};
 
 	const handleSetPhoneNumber = useCallback((number: string, code: string) => {
@@ -52,6 +89,14 @@ const Profile = () => {
 		router.push('/(auth)/login');
 	};
 
+	useEffect(() => {
+		if (image !== profile.image) {
+			setForm({ ...form, image: image });
+			setProfile({ ...profile, image: image });
+			uploadImageToUser(image, profile.email);
+		}
+	}, [image]);
+
 	return (
 		<SafeAreaView className="px-5 h-full">
 			<NavBar text="Profile" />
@@ -61,7 +106,7 @@ const Profile = () => {
 					className="relative items-center justify-center w-[121px] h-[121px] rounded-full bg-tertiary-300"
 				>
 					<Image
-						source={form.image === null ? images.profile : { uri: form.image?.uri }}
+						source={form.image === null ? images.profile : { uri: image }}
 						resizeMode="cover"
 						className="w-[121px] h-[121px] rounded-full"
 					/>
@@ -81,7 +126,7 @@ const Profile = () => {
 				<PhoneNumberInput
 					country={profile?.phoneNumber.countryCode}
 					number={profile?.phoneNumber.number}
-					setNumber={handleSetPhoneNumber}
+					setData={handleSetPhoneNumber}
 				/>
 
 				<View className="border border-secondary-400 px-5 py-4 rounded-lg text-secondary-600">

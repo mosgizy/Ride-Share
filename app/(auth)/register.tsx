@@ -24,6 +24,7 @@ const Register = () => {
 	const [modal, setModal] = useState(false);
 	const [gender, setGender] = useState('Gender');
 	const [countryCode, setCountryCode] = useState('');
+	const [numberCode, setNumberCode] = useState<string>('');
 
 	const genderType = ['male', 'female', 'others'];
 
@@ -32,7 +33,7 @@ const Register = () => {
 		setModal(false);
 	};
 
-	const handleRegister = () => {
+	const handleRegister = async () => {
 		if (
 			form.name !== '' &&
 			countryCode !== '' &&
@@ -43,18 +44,21 @@ const Register = () => {
 			setProfile({
 				name: form.name,
 				email: form.email,
-				phoneNumber: { countryCode: countryCode, number: form.phoneNumber },
+				phoneNumber: { countryCode, number: form.phoneNumber, numberCode },
 				city: '',
 				street: '',
+				gender: gender,
 				image: null,
+				terms: form.terms,
 			});
 			router.push('/phone-verification');
 		}
 	};
 
-	const handleSetPhoneNumber = (number: string, code: string) => {
+	const handleSetPhoneNumber = (number: string, code: string, numberCode?: string) => {
 		setForm({ ...form, phoneNumber: number });
 		setCountryCode(code);
+		numberCode && setNumberCode(numberCode);
 	};
 
 	return (
@@ -80,7 +84,7 @@ const Register = () => {
 							placeholderTextColor={'#D0D0D0'}
 							className="border border-secondary-400 px-5 py-4 rounded-lg text-secondary-600"
 						/>
-						<PhoneNumberInput setNumber={handleSetPhoneNumber} number={form.phoneNumber} />
+						<PhoneNumberInput setData={handleSetPhoneNumber} number={form.phoneNumber} />
 
 						<View className="border border-secondary-400 px-5 py-4 rounded-lg text-secondary-600">
 							<TouchableOpacity

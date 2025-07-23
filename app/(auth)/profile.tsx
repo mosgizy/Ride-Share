@@ -3,12 +3,17 @@ import PhoneNumberInput from '@/components/PhoneNumberInput';
 import PrimaryBtn from '@/components/PrimaryBtn';
 import SecondaryBtn from '@/components/SecondayBtn';
 import { icons, images } from '@/constants';
+import { imagePicker } from '@/helper/imagePicker';
+import { saveUserProfile } from '@/helper/saveUserProfile';
+import { uploadAvatar } from '@/helper/uploadAvatar';
+import useGetUserData from '@/hooks/getUserData';
+import { supabase } from '@/lib/supabase';
 import useAuhStore from '@/store/authStore';
+import useMapStore from '@/store/store';
 import axios from 'axios';
-import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FlatList, Image, Modal, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -24,10 +29,8 @@ const Profile = () => {
 		image: null,
 	});
 
-	const { setProfile } = useAuhStore();
-
 	const [modal, setModal] = useState(false);
-
+	const [numberCode, setNumberCode] = useState<string>(profile.phoneNumber.numberCode as string);
 	const [results, setResults] = useState([]);
 
 	const fetchCities = async () => {
@@ -54,36 +57,73 @@ const Profile = () => {
 		setModal(false);
 	};
 
+	const [image, setImage] = useState<string>('');
+	const { setAvatarPath } = useMapStore();
+	const { status: fetchStatus, getUserData } = useGetUserData();
+
 	const openPicker = async () => {
-		const result = await ImagePicker.launchImageLibraryAsync({
-			mediaTypes: ['images'],
-			aspect: [4, 3],
-			quality: 1,
-		});
+		const imageUrl = await imagePicker();
 
-		if (!result.canceled) {
-			setForm({ ...form, image: result.assets[0] });
+		if (!imageUrl) return;
+
+		const {
+			data: { user },
+		} = await supabase.auth.getUser();
+
+		const { error, path } = await uploadAvatar(imageUrl?.uri, user!.id);
+
+		if (!path && error) {
+			console.log(error);
+			return;
 		}
-	};
 
-	const handleSave = () => {
-		setProfile({
-			name: form.name,
-			email: form.email,
-			phoneNumber: { countryCode: countryCode, number: form.phoneNumber },
-			city: form.city,
-			street: form.street,
-			image: form.image,
-		});
-		router.push('/home');
+		setAvatarPath(path as string);
+
+		supabase.storage
+			.from('avatars')
+			.download(path as string)
+			.then(({ data }) => {
+				const fr = new FileReader();
+				fr.readAsDataURL(data!);
+				fr.onload = () => {
+					setImage(fr.result as string);
+				};
+			});
 	};
 
 	const [countryCode, setCountryCode] = useState(profile?.phoneNumber.countryCode);
 
-	const handleSetPhoneNumber = useCallback((number: string, code: string) => {
+	const handleSetPhoneNumber = (number: string, code: string, numberCode?: string | [string]) => {
 		setForm({ ...form, phoneNumber: number });
 		setCountryCode(code);
-	}, []);
+		numberCode && setNumberCode(numberCode[0]);
+	};
+
+	const handleSave = async () => {
+		const profileInfo = {
+			name: form.name as string,
+			email: form.email as string,
+			avatar_url: image,
+			phoneNumber: {
+				countryCode: countryCode as string,
+				number: form.phoneNumber as string,
+				numberCode,
+			},
+			city: form.city,
+			street: form.street,
+			terms: profile.terms,
+		};
+
+		const { error: uploadErr, status } = await saveUserProfile(profileInfo);
+
+		if (!status) return;
+
+		await getUserData();
+
+		if (!fetchStatus.status) console.log(fetchStatus.error);
+
+		router.push('/home');
+	};
 
 	useEffect(() => {
 		fetchCities();
@@ -98,7 +138,7 @@ const Profile = () => {
 					className="relative items-center justify-center w-[121px] h-[121px] rounded-full bg-tertiary-300"
 				>
 					<Image
-						source={form.image === null ? images.profile : { uri: form.image?.uri }}
+						source={image === '' ? images.profile : { uri: image }}
 						resizeMode="cover"
 						className="w-[121px] h-[121px] rounded-full"
 					/>
@@ -121,7 +161,7 @@ const Profile = () => {
 				<PhoneNumberInput
 					country={profile?.phoneNumber.countryCode}
 					number={profile?.phoneNumber.number}
-					setNumber={handleSetPhoneNumber}
+					setData={handleSetPhoneNumber}
 				/>
 				<TextInput
 					value={form.email}

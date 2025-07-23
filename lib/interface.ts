@@ -31,6 +31,9 @@ export interface MapStore {
 
   addressFromTo: FromTo | null;
 
+  avatarPath: string,
+  setAvatarPath:(path:string) => void
+
   setAddressFromTo:(address:FromTo) => void
 
   setRecentPlaces: (recentPlace:Places) => void;

@@ -11,11 +11,11 @@ const countries = rawCountries.map((country) => ({
 export default function PhoneInputWithDropdown({
 	number,
 	country,
-	setNumber,
+	setData,
 }: {
 	country?: string;
 	number?: string;
-	setNumber: (number: string, code: string) => void;
+	setData: (number: string, code: string, numberCode?: string) => void;
 }) {
 	const [modalVisible, setModalVisible] = useState(false);
 	const [selectedCountry, setSelectedCountry] = useState(countries[0]);
@@ -56,8 +56,8 @@ export default function PhoneInputWithDropdown({
 					keyboardType="number-pad"
 					className="flex-1 text-base text-black"
 					value={number}
-					{...(setNumber && {
-						onChangeText: (e) => setNumber(e, selectedCountry.code),
+					{...(setData && {
+						onChangeText: (e) => setData(e, selectedCountry.code, selectedCountry?.dialCodes[0]),
 					})}
 				/>
 			</View>

@@ -14,6 +14,8 @@ const useMapStore = create<MapStore>()(
 			addressFromTo:null,
 			recentPlaces: [],
 			sideBarModal: false,
+			avatarPath: "",
+			setAvatarPath:(path) => set({avatarPath:path}),
 			setSideBarModal:(status) => set({sideBarModal:status}),
 			setRecentPlaces:(place) => set((state) => ({recentPlaces:[...state.recentPlaces,place].slice(-5)})),
 			setLocationPermission: (permission) => set({ locationPermission: permission }),
@@ -28,6 +30,7 @@ const useMapStore = create<MapStore>()(
 			name: "map-store",
 			storage: createJSONStorage(() => AsyncStorage ),
 			partialize: (state) => ({
+				avatarPath: state.avatarPath,
 				recentPlaces: state.recentPlaces
 			})
 		}
