@@ -2,10 +2,12 @@ import { icons } from '@/constants';
 import { getAddressFromCoords } from '@/helper/getAddressFromCord';
 import useMapStore from '@/store/store';
 import * as Location from 'expo-location';
+import { router } from 'expo-router';
 import haversine from 'haversine';
 import React, { useEffect, useRef, useState } from 'react';
 import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
+import { DotLoader } from './Loader';
 import PrimaryBtn from './PrimaryBtn';
 
 const LiveMap = () => {
@@ -24,6 +26,7 @@ const LiveMap = () => {
 
 	const handleSelection = (select: string) => {
 		setSelected(select);
+		setLocationModal(true);
 	};
 
 	const handleToTargetMark = () => {
@@ -155,14 +158,14 @@ const LiveMap = () => {
 				</MapView>
 			) : (
 				<View className="flex-1 items-center justify-center bg-gray-100">
-					<Text className="text-gray-700 text-lg">Loading location...</Text>
+					<DotLoader />
 				</View>
 			)}
 			<View className="absolute inset-0 flex items-center justify-end mb-20 px-3">
 				<View className="flex-row justify-between items-center w-full">
 					<PrimaryBtn
 						text="Rental"
-						fn={() => setLocationModal(true)}
+						fn={() => router.push('/(transport)/select-transport')}
 						additionalStyle="flex-1 !py-5"
 					/>
 					<View className="flex-1 items-end">
@@ -189,7 +192,7 @@ const LiveMap = () => {
 						</View>
 						<Image source={icons.love} resizeMode="contain" className="w-6 h-6" />
 					</View>
-					<View className="flex-row bg-primary-300 rounded-lg border border-tertiary-700 mt-5">
+					<View className="flex-row bg-primary-300 rounded-xl border border-tertiary-700 mt-5">
 						<TouchableOpacity
 							onPress={() => handleSelection('transport')}
 							className={`${
