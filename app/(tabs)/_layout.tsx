@@ -2,11 +2,8 @@ import AddressSelectionModal from '@/components/AddressSelectionModal';
 import LocationScreenConfirm from '@/components/LocationScreenConfirm';
 import Sidebar from '@/components/Sidebar';
 import { icons } from '@/constants';
-import { supabase } from '@/lib/supabase';
-import useAuhStore from '@/store/authStore';
 import { Tabs } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
 import { ColorValue, Image, ImageSourcePropType, Text, View } from 'react-native';
 
 interface TabIconI {

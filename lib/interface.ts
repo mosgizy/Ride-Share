@@ -1,4 +1,3 @@
-import { ImageSourcePropType } from "react-native";
 
 export interface MapCoordinate {
   latitude: number;
@@ -53,19 +52,18 @@ export interface CarInfo {
   model: string;
   capacity: number;
   color: string;
-  fuelType: 'Petrol' | 'Diesel' | 'Electric' | 'Octane' | 'Hybrid';
-  gearType: 'Automatic' | 'Manual';
+  fuel_type: 'Petrol' | 'Diesel' | 'Electric' | 'Octane' | 'Hybrid';
+  gear_type: 'Automatic' | 'Manual';
   distance: string;
   rating: number;
   reviews: number;
-  maxPower: string;      
-  zeroToSixty: string;   
-  tankSize: string;      
-  maxSpeed: string;      
-  image: ImageSourcePropType;            
+  max_power: string;      
+  zero_to_sixty: string;   
+  tank_size: string;      
+  max_speed: string;      
+  image: string;
+  car_image:string
 }
-
-// renstore
 
 export interface RentStore{
   bookedCar: CarInfo | null;

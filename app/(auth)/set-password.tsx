@@ -29,12 +29,6 @@ const SetPassword = () => {
 		} = await supabase.auth.signUp({
 			email: profile.email,
 			password: password,
-			options: {
-				data: {
-					phoneNumber: `${profile.phoneNumber.numberCode} ${profile.phoneNumber.number}`,
-					gender: profile.gender,
-				},
-			},
 		});
 
 		if (error) {

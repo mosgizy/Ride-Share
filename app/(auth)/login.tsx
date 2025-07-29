@@ -3,7 +3,6 @@ import PrimaryBtn from '@/components/PrimaryBtn';
 import TertiaryBtn from '@/components/TertiaryBtn';
 import { icons } from '@/constants';
 import { supabase } from '@/lib/supabase';
-import useAuhStore from '@/store/authStore';
 import { Link, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
@@ -38,7 +37,9 @@ const Login = () => {
 			setLoading(false);
 			return;
 		}
-		router.push('/phone-verification');
+
+		setLoading(false);
+		router.replace('/phone-verification');
 	};
 
 	return (
@@ -55,7 +56,7 @@ const Login = () => {
 							onChangeText={(e) => setForm({ ...form, emailorPhone: e })}
 							placeholder="Email or Phone Number"
 							placeholderTextColor={'#D0D0D0'}
-							className="border border-secondary-400 px-5 py-4 rounded-lg text-secondary-600"
+							className="border border-secondary-400 px-5 py-6 rounded-lg text-secondary-600"
 						/>
 						<View className="flex-row items-center border border-secondary-400 px-5 py-3 rounded-lg text-secondary-600">
 							<TextInput
@@ -82,14 +83,14 @@ const Login = () => {
 					>
 						<Text className="font-medium text-sm text-secondary-300">Forget password?</Text>
 					</TouchableOpacity>
-					<PrimaryBtn fn={signIn} text="Sign In" additionalStyle="mt-8" />
+					<PrimaryBtn fn={signIn} text="Sign In" loading={loading} additionalStyle="mt-8" />
 					<View className="flex-row items-center gap-2 mt-4">
 						<View className="flex-1 h-px bg-secondary-400" />
 						<Text className="text-secondary-400 font-medium">or</Text>
 						<View className="flex-1 h-px bg-secondary-400" />
 					</View>
 					<View className="mt-4 gap-5">
-						<TertiaryBtn text="Sign up with Gmail" fn={() => 'hello'} image={icons.gmail} />
+						<TertiaryBtn text="Sign up with Gmail" fn={() => {}} image={icons.gmail} />
 						<TertiaryBtn text="Sign up with Facebook" fn={() => 'hello'} image={icons.facebook} />
 						<TertiaryBtn text="Sign up with Apple" fn={() => 'hello'} image={icons.apple} />
 					</View>

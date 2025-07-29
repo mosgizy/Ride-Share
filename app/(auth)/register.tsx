@@ -39,7 +39,8 @@ const Register = () => {
 			countryCode !== '' &&
 			form.email !== '' &&
 			form.phoneNumber !== '' &&
-			form.terms
+			form.terms &&
+			gender
 		) {
 			setProfile({
 				name: form.name,

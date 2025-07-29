@@ -3,7 +3,7 @@ import { ImageSourcePropType } from "react-native";
 
 export interface AuthStore{
   isLoggedIn: boolean
-  profile: Profile ;
+  profile: Profile;
   languageSelected: string;
   session: Session | null,
   setSession: (session:Session | null) => void

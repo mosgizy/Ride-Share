@@ -32,6 +32,7 @@ const Profile = () => {
 	const [modal, setModal] = useState(false);
 	const [numberCode, setNumberCode] = useState<string>(profile.phoneNumber.numberCode as string);
 	const [results, setResults] = useState([]);
+	const [loading, setLoading] = useState(false);
 
 	const fetchCities = async () => {
 		try {
@@ -100,10 +101,12 @@ const Profile = () => {
 	};
 
 	const handleSave = async () => {
+		setLoading(true);
 		const profileInfo = {
 			name: form.name as string,
 			email: form.email as string,
 			avatar_url: image,
+			gender: profile.gender,
 			phoneNumber: {
 				countryCode: countryCode as string,
 				number: form.phoneNumber as string,
@@ -114,13 +117,17 @@ const Profile = () => {
 			terms: profile.terms,
 		};
 
-		const { error, status } = await saveUserProfile(profileInfo);
+		const { status } = await saveUserProfile(profileInfo);
 
-		if (!status) return;
+		if (!status) {
+			setLoading(false);
+			return;
+		}
 
 		await getUserData();
 
 		if (!fetchStatus.status) console.log(fetchStatus.error);
+		setLoading(false);
 
 		router.push('/home');
 	};
@@ -217,7 +224,7 @@ const Profile = () => {
 					text="Cancel"
 					additionalStyle="flex-1"
 				/>
-				<PrimaryBtn fn={handleSave} text="Save" additionalStyle="flex-1" />
+				<PrimaryBtn fn={handleSave} text="Save" loading={loading} additionalStyle="flex-1" />
 			</View>
 			<StatusBar style="dark" translucent />
 		</SafeAreaView>

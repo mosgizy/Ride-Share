@@ -1,11 +1,11 @@
 import React from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { DotLoader } from './Loader';
+import { Loader } from './Loader';
 
 const LoadingPage = () => {
 	return (
 		<SafeAreaView className="h-full px-5 justify-center items-center">
-			<DotLoader />
+			<Loader />
 		</SafeAreaView>
 	);
 };

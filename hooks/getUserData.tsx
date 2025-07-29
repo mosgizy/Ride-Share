@@ -38,7 +38,7 @@ const useGetUserData = () => {
 			city: userData.city,
 			street: userData.street,
 			image: userData.avatar_url,
-			gender: session!.user.user_metadata.gender,
+			gender: userData.gender,
 			phoneNumber: {
 				countryCode: userData.phoneNumber.countryCode,
 				number: userData.phoneNumber.number,

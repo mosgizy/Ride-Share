@@ -10,7 +10,7 @@ import useMapStore from '@/store/store';
 import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useState } from 'react';
-import { Image, Modal, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, Modal, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Profile = () => {
@@ -79,9 +79,32 @@ const Profile = () => {
 		return { status: true, error };
 	};
 
-	const handleSetPhoneNumber = useCallback((number: string, code: string) => {
-		setForm({ ...form, phoneNumber: number });
-	}, []);
+	const handleSetPhoneNumber = useCallback(
+		async (number: string, code: string, numberCode?: string) => {
+			// const newPhoneNumber = {
+			// 	number,
+			// 	countryCode: code,
+			// 	numberCode,
+			// };
+
+			// const { error, data } = await supabase
+			// 	.from('users')
+			// 	.update({
+			// 		phoneNumber: newPhoneNumber,
+			// 	})
+			// 	.eq('email', profile.email);
+
+			// if (error) {
+			// 	Alert.alert('Something went wrong', error.message);
+			// 	return;
+			// }
+
+			// console.log(data);
+
+			setForm({ ...form, phoneNumber: number });
+		},
+		[]
+	);
 
 	const logout = () => {
 		setIsLoggedIn(false);
@@ -97,6 +120,37 @@ const Profile = () => {
 		}
 	}, [image]);
 
+	useEffect(() => {
+		const channel = supabase.channel('user-channel');
+		channel
+			.on('postgres_changes', { event: '*', schema: 'public', table: 'users' }, (payload) => {
+				const updatedUser = payload.new;
+				const newUser = {
+					name: updatedUser.name as string,
+					email: updatedUser.email as string,
+					image: updatedUser.avatar_Url,
+					gender: updatedUser.gender,
+					phoneNumber: {
+						countryCode: updatedUser.phoneNumber.countryCode as string,
+						number: updatedUser.phoneNumber.number as string,
+						numberCode: updatedUser.phoneNumber.numberCode,
+					},
+					city: updatedUser.city,
+					street: updatedUser.street,
+					terms: updatedUser.terms,
+				};
+
+				if (payload.eventType === 'UPDATE') {
+					setProfile(newUser);
+				}
+			})
+			.subscribe();
+
+		return () => {
+			supabase.removeChannel(channel);
+		};
+	}, []);
+
 	return (
 		<SafeAreaView className="px-5 h-full">
 			<NavBar text="Profile" />
@@ -106,7 +160,7 @@ const Profile = () => {
 					className="relative items-center justify-center w-[121px] h-[121px] rounded-full bg-tertiary-300"
 				>
 					<Image
-						source={form.image === null ? images.profile : { uri: image }}
+						source={form.image === '' ? images.profile : { uri: image }}
 						resizeMode="cover"
 						className="w-[121px] h-[121px] rounded-full"
 					/>

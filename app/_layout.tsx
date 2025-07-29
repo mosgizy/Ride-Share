@@ -1,6 +1,5 @@
 import { supabase } from '@/lib/supabase';
 import useAuhStore from '@/store/authStore';
-import { Session } from '@supabase/supabase-js';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';

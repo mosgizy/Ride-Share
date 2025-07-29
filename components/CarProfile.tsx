@@ -13,7 +13,7 @@ const CarProfile = ({ car }: { car: CarInfo }) => {
 
 	const { name, distance, image } = car;
 
-	const info = `${car.gearType} | ${car.capacity} | ${car.fuelType}`;
+	const info = `${car.gear_type} | ${car.capacity} | ${car.fuel_type}`;
 
 	const bookLater = () => {
 		setBookLater(car);
@@ -31,14 +31,18 @@ const CarProfile = ({ car }: { car: CarInfo }) => {
 						<Text className="text-primary-100 text-xs font-medium">{distance}</Text>
 					</View>
 				</View>
-				<Image source={image} resizeMode="contain" className="w-[101px] h-[59px]" />
+				<Image
+					source={{ uri: image }}
+					resizeMode="contain"
+					className="w-[101px] h-[59px] rounded-sm mix-blend-lighten"
+				/>
 			</View>
 			{viewCar ? (
 				<View className="flex-row gap-2 mt-7">
 					<SecondaryBtn text="Book later" fn={bookLater} additionalStyle="flex-1" />
 					<PrimaryBtn
 						text="Ride Now"
-						fn={() => router.push(`/car/${name}`)}
+						fn={() => router.push(`/car/${car.id}`)}
 						additionalStyle="flex-1"
 					/>
 				</View>

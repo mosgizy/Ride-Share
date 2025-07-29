@@ -135,7 +135,7 @@ const SideBar = () => {
 						className="w-[70px] h-[70px] rounded-full border border-primary overflow-hidden"
 					>
 						<Image
-							source={profile?.image !== null ? { uri: profile?.image } : images.profile}
+							source={profile?.image !== '' ? { uri: profile?.image } : images.profile}
 							resizeMode="cover"
 							className="w-[70px] h-[70px] rounded-full"
 						/>

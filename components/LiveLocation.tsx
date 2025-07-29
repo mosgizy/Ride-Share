@@ -7,7 +7,7 @@ import haversine from 'haversine';
 import React, { useEffect, useRef, useState } from 'react';
 import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
-import { DotLoader } from './Loader';
+import { Loader } from './Loader';
 import PrimaryBtn from './PrimaryBtn';
 
 const LiveMap = () => {
@@ -158,7 +158,7 @@ const LiveMap = () => {
 				</MapView>
 			) : (
 				<View className="flex-1 items-center justify-center bg-gray-100">
-					<DotLoader />
+					<Loader />
 				</View>
 			)}
 			<View className="absolute inset-0 flex items-center justify-end mb-20 px-3">
