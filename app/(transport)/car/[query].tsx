@@ -3,8 +3,10 @@ import LoadingPage from '@/components/LoadingPage';
 import PrimaryBtn from '@/components/PrimaryBtn';
 import SecondaryBtn from '@/components/SecondayBtn';
 import { icons } from '@/constants';
+import { sendPushNotification } from '@/helper/sendNotification';
 import { CarInfo } from '@/lib/interface';
 import { supabase } from '@/lib/supabase';
+import useAuhStore from '@/store/authStore';
 import useRentStore from '@/store/rentStore';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -13,9 +15,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 const CarDetails = () => {
 	const { query } = useLocalSearchParams();
-	const { setBooked, setBookLater } = useRentStore();
+	const { setBooked, setBookLater, bookedCar } = useRentStore();
 	const [car, setCar] = useState<CarInfo>();
 	const [loading, setLoading] = useState(false);
+	const { profile, notificationToken } = useAuhStore();
 
 	const fetchCar = async () => {
 		setLoading(true);
@@ -32,11 +35,84 @@ const CarDetails = () => {
 		setLoading(false);
 	};
 
-	console.log(car, query);
+	const bookRide = async () => {
+		const { data, error } = await supabase.from('booked').select('*').eq('email', profile.email);
 
-	const bookRide = () => {
-		setBooked(car);
+		if (error) {
+			console.log(error, 'check');
+			return;
+		}
+
+		if (data && data?.length > 0) {
+			router.push('/(transport)/request?type=Request for rent');
+			Alert.alert('You already booked a ride');
+			return;
+		}
+
+		const newCar = {
+			email: profile.email,
+			name: car?.name,
+			model: car?.model,
+			capacity: car?.capacity,
+			color: car?.color,
+			fuel_type: car?.fuel_type,
+			gear_type: car?.gear_type,
+			distance: car?.distance,
+			rating: car?.rating,
+			reviews: car?.reviews,
+			max_power: car?.max_power,
+			zero_to_sixty: car?.zero_to_sixty,
+			tank_size: car?.tank_size,
+			max_speed: car?.max_speed,
+			image: car?.image,
+			car_image: car?.car_image,
+		};
+
+		const { error: uploadCarError } = await supabase.from('booked').insert(newCar);
+
+		if (uploadCarError) {
+			console.log(uploadCarError, 'book ride failed');
+			return;
+		}
+
+		const info = {
+			title: 'You just booked a ride!',
+			body: `Thanks for booking ${car?.name}`,
+			sound: 'default',
+			data: { screen: 'Booked Car', carId: car?.id },
+		};
+
+		sendPushNotification(notificationToken, info);
+
 		router.push('/(transport)/request?type=Request for rent');
+	};
+
+	const bookeLater = async () => {
+		const newCar = {
+			email: profile.email,
+			name: car?.name,
+			model: car?.model,
+			capacity: car?.capacity,
+			color: car?.color,
+			fuel_type: car?.fuel_type,
+			gear_type: car?.gear_type,
+			distance: car?.distance,
+			rating: car?.rating,
+			reviews: car?.reviews,
+			max_power: car?.max_power,
+			zero_to_sixty: car?.zero_to_sixty,
+			tank_size: car?.tank_size,
+			max_speed: car?.max_speed,
+			image: car?.image,
+			car_image: car?.car_image,
+		};
+
+		const { error: uploadCarError } = await supabase.from('book-later').insert(newCar);
+
+		if (uploadCarError) {
+			console.log(uploadCarError, 'book ride failed');
+			return;
+		}
 	};
 
 	useEffect(() => {
@@ -115,7 +191,7 @@ const CarDetails = () => {
 						</View>
 					</View>
 					<View className="flex-row gap-2 mt-7 mb-10">
-						<SecondaryBtn text="Book later" fn={() => setBookLater(car)} additionalStyle="flex-1" />
+						<SecondaryBtn text="Book later" fn={bookeLater} additionalStyle="flex-1" />
 						<PrimaryBtn text="Ride Now" fn={bookRide} additionalStyle="flex-1" />
 					</View>
 				</ScrollView>

@@ -1,3 +1,4 @@
+import { registerForPushNotificationsAsync, setupNotificationChannel } from '@/helper/notification';
 import { supabase } from '@/lib/supabase';
 import useAuhStore from '@/store/authStore';
 import { useFonts } from 'expo-font';
@@ -17,7 +18,7 @@ AppState.addEventListener('change', (state) => {
 });
 
 export default function RootLayout() {
-	const { isLoggedIn, setSession, setIsLoggedIn, setProfile, session } = useAuhStore();
+	const { isLoggedIn, setSession, setIsLoggedIn, setNotificationToken } = useAuhStore();
 	const [fontsLoaded] = useFonts({
 		'Poppins-Regular': require('../assets/fonts/Poppins-Regular.ttf'),
 		'Poppins-Medium': require('../assets/fonts/Poppins-Medium.ttf'),
@@ -38,6 +39,28 @@ export default function RootLayout() {
 				setIsLoggedIn(true);
 			}
 		});
+
+		const saveToken = async () => {
+			const token = await registerForPushNotificationsAsync();
+			if (!token) return;
+
+			setupNotificationChannel();
+
+			setNotificationToken(token);
+
+			const {
+				data: { user },
+			} = await supabase.auth.getUser();
+
+			const { error } = await supabase
+				.from('users')
+				.update({ expo_push_token: token })
+				.eq('email', user?.email);
+
+			if (error) console.error('Token save failed', error);
+		};
+
+		saveToken();
 
 		return () => {
 			data.subscription.unsubscribe();

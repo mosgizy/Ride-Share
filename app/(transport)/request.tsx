@@ -4,18 +4,24 @@ import ModalTemplate from '@/components/Modal';
 import PaymentSucessModal from '@/components/PaymentSucessModal';
 import PrimaryBtn from '@/components/PrimaryBtn';
 import { icons } from '@/constants';
+import { CarInfo } from '@/lib/interface';
+import { supabase } from '@/lib/supabase';
+import useAuhStore from '@/store/authStore';
 import useRentStore from '@/store/rentStore';
 import useMapStore from '@/store/store';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Image, Platform, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Request = () => {
 	const { addressFromTo, recentPlaces } = useMapStore();
-	const { bookedCar, setDate: setStoreDate } = useRentStore();
+	const { setDate: setStoreDate } = useRentStore();
+	const { profile } = useAuhStore();
 	const { type } = useLocalSearchParams();
+
+	const [bookedCar, setBookedCar] = useState<CarInfo>();
 
 	const [date, setDate] = useState(new Date());
 	const [showPicker, setShowPicker] = useState(false);
@@ -67,6 +73,26 @@ const Request = () => {
 		setThanks(false);
 	};
 
+	const closeFeedBackAndReturnHome = () => {
+		setFeedBack(false);
+		setSuccessModal(false);
+		router.push('/(tabs)/home');
+	};
+
+	useEffect(() => {
+		const getBookedCar = async () => {
+			const { data, error } = await supabase
+				.from('booked')
+				.select('*')
+				.eq('email', profile.email)
+				.single();
+
+			setBookedCar(data);
+		};
+
+		getBookedCar();
+	}, []);
+
 	return (
 		<>
 			<SafeAreaView className="h-full px-5">
@@ -105,7 +131,11 @@ const Request = () => {
 							</Text>
 						</View>
 					</View>
-					<Image source={bookedCar?.image} resizeMode="contain" className="w-[93px] h-[54px]" />
+					<Image
+						source={{ uri: bookedCar?.image }}
+						resizeMode="contain"
+						className="w-[93px] h-[54px]"
+					/>
 				</View>
 				{showPrice ? (
 					<View className="mt-5">
@@ -183,7 +213,7 @@ const Request = () => {
 				</View>
 
 				<PaymentSucessModal
-					fn={() => setSuccessModal(false)}
+					fn={closeFeedBackAndReturnHome}
 					feedBack={handleFeedBack}
 					successModal={successModal}
 				/>

@@ -5,7 +5,9 @@ export interface AuthStore{
   isLoggedIn: boolean
   profile: Profile;
   languageSelected: string;
-  session: Session | null,
+  session: Session | null;
+  notificationToken: string;
+  setNotificationToken: (token:string) => void
   setSession: (session:Session | null) => void
   setLanguageSelected:(language:string) => void
   setIsLoggedIn: (status: boolean) => void;

@@ -50,13 +50,13 @@ export interface CarInfo {
   id: string;
   name: string;
   model: string;
-  capacity: number;
+  capacity: string;
   color: string;
   fuel_type: 'Petrol' | 'Diesel' | 'Electric' | 'Octane' | 'Hybrid';
   gear_type: 'Automatic' | 'Manual';
   distance: string;
-  rating: number;
-  reviews: number;
+  rating: string;
+  reviews: string;
   max_power: string;      
   zero_to_sixty: string;   
   tank_size: string;      

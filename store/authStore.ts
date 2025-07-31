@@ -23,6 +23,8 @@ const useAuhStore = create<AuthStore>()(
       profile: profile,
       languageSelected: "english",
       session: null,
+      notificationToken: "",
+      setNotificationToken: (token) => set({notificationToken:token}),
       setSession:(session) => set({session}),
       setLanguageSelected: (language) => set({ languageSelected: language }),
       logoutUser: () => set((state) => {
@@ -38,6 +40,7 @@ const useAuhStore = create<AuthStore>()(
       storage: createJSONStorage(() => AsyncStorage),
       partialize: (state) => ({
         profile: state.profile,
+        notificationToken:state.notificationToken,
         languageSelected:state.languageSelected
       })
     }
