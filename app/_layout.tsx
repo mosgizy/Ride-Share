@@ -4,6 +4,7 @@ import useAuhStore from '@/store/authStore';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
+import { ToastProvider } from 'expo-toast';
 import { useEffect } from 'react';
 import { AppState } from 'react-native';
 import 'react-native-gesture-handler';
@@ -72,27 +73,29 @@ export default function RootLayout() {
 	}
 
 	return (
-		<Stack>
-			<Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
-			<Stack.Screen name="(auth)" options={{ headerShown: false }} />
-			<Stack.Protected guard={isLoggedIn}>
-				<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-			</Stack.Protected>
-			<Stack.Protected guard={isLoggedIn}>
-				<Stack.Screen name="(transport)" options={{ headerShown: false }} />
-			</Stack.Protected>
-			<Stack.Protected guard={isLoggedIn}>
-				<Stack.Screen name="(chat)" options={{ headerShown: false }} />
-			</Stack.Protected>
-			<Stack.Protected guard={isLoggedIn}>
-				<Stack.Screen name="(sidebar)" options={{ headerShown: false }} />
-			</Stack.Protected>
-			<Stack.Protected guard={isLoggedIn}>
-				<Stack.Screen name="notification" options={{ headerShown: false }} />
-			</Stack.Protected>
-			<Stack.Protected guard={isLoggedIn}>
-				<Stack.Screen name="add-money" options={{ headerShown: false }} />
-			</Stack.Protected>
-		</Stack>
+		<ToastProvider>
+			<Stack>
+				<Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
+				<Stack.Screen name="(auth)" options={{ headerShown: false }} />
+				<Stack.Protected guard={isLoggedIn}>
+					<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+				</Stack.Protected>
+				<Stack.Protected guard={isLoggedIn}>
+					<Stack.Screen name="(transport)" options={{ headerShown: false }} />
+				</Stack.Protected>
+				<Stack.Protected guard={isLoggedIn}>
+					<Stack.Screen name="(chat)" options={{ headerShown: false }} />
+				</Stack.Protected>
+				<Stack.Protected guard={isLoggedIn}>
+					<Stack.Screen name="(sidebar)" options={{ headerShown: false }} />
+				</Stack.Protected>
+				<Stack.Protected guard={isLoggedIn}>
+					<Stack.Screen name="notification" options={{ headerShown: false }} />
+				</Stack.Protected>
+				<Stack.Protected guard={isLoggedIn}>
+					<Stack.Screen name="add-money" options={{ headerShown: false }} />
+				</Stack.Protected>
+			</Stack>
+		</ToastProvider>
 	);
 }

@@ -9,6 +9,7 @@ import { supabase } from '@/lib/supabase';
 import useAuhStore from '@/store/authStore';
 import useRentStore from '@/store/rentStore';
 import { router, useLocalSearchParams } from 'expo-router';
+import { useToast } from 'expo-toast';
 import { useEffect, useState } from 'react';
 import { Alert, Image, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -19,6 +20,7 @@ const CarDetails = () => {
 	const [car, setCar] = useState<CarInfo>();
 	const [loading, setLoading] = useState(false);
 	const { profile, notificationToken } = useAuhStore();
+	const toast = useToast();
 
 	const fetchCar = async () => {
 		setLoading(true);
@@ -35,6 +37,25 @@ const CarDetails = () => {
 		setLoading(false);
 	};
 
+	const newCar = {
+		email: profile.email,
+		name: car?.name,
+		model: car?.model,
+		capacity: car?.capacity,
+		color: car?.color,
+		fuel_type: car?.fuel_type,
+		gear_type: car?.gear_type,
+		distance: car?.distance,
+		rating: car?.rating,
+		reviews: car?.reviews,
+		max_power: car?.max_power,
+		zero_to_sixty: car?.zero_to_sixty,
+		tank_size: car?.tank_size,
+		max_speed: car?.max_speed,
+		image: car?.image,
+		car_image: car?.car_image,
+	};
+
 	const bookRide = async () => {
 		const { data, error } = await supabase.from('booked').select('*').eq('email', profile.email);
 
@@ -43,30 +64,15 @@ const CarDetails = () => {
 			return;
 		}
 
-		if (data && data?.length > 0) {
-			router.push('/(transport)/request?type=Request for rent');
-			Alert.alert('You already booked a ride');
+		if (Array.isArray(data) && data.length > 0) {
+			await supabase.from('booked').delete().eq('email', profile.email);
+			console.log(data);
+
+			// toast.show('You already booked a ride', {
+			// 	duration: 2000,
+			// });
 			return;
 		}
-
-		const newCar = {
-			email: profile.email,
-			name: car?.name,
-			model: car?.model,
-			capacity: car?.capacity,
-			color: car?.color,
-			fuel_type: car?.fuel_type,
-			gear_type: car?.gear_type,
-			distance: car?.distance,
-			rating: car?.rating,
-			reviews: car?.reviews,
-			max_power: car?.max_power,
-			zero_to_sixty: car?.zero_to_sixty,
-			tank_size: car?.tank_size,
-			max_speed: car?.max_speed,
-			image: car?.image,
-			car_image: car?.car_image,
-		};
 
 		const { error: uploadCarError } = await supabase.from('booked').insert(newCar);
 
@@ -83,35 +89,49 @@ const CarDetails = () => {
 		};
 
 		sendPushNotification(notificationToken, info);
+		toast.show('Ride booked successfully', {
+			duration: 2000,
+		});
 
 		router.push('/(transport)/request?type=Request for rent');
 	};
 
-	const bookeLater = async () => {
-		const newCar = {
-			email: profile.email,
-			name: car?.name,
-			model: car?.model,
-			capacity: car?.capacity,
-			color: car?.color,
-			fuel_type: car?.fuel_type,
-			gear_type: car?.gear_type,
-			distance: car?.distance,
-			rating: car?.rating,
-			reviews: car?.reviews,
-			max_power: car?.max_power,
-			zero_to_sixty: car?.zero_to_sixty,
-			tank_size: car?.tank_size,
-			max_speed: car?.max_speed,
-			image: car?.image,
-			car_image: car?.car_image,
-		};
+	const bookLater = async () => {
+		try {
+			const { data, error } = await supabase
+				.from('book-later')
+				.select('*')
+				.eq('email', profile.email);
 
-		const { error: uploadCarError } = await supabase.from('book-later').insert(newCar);
+			if (!data && error) {
+				console.log(error);
 
-		if (uploadCarError) {
-			console.log(uploadCarError, 'book ride failed');
-			return;
+				return;
+			}
+
+			const alreadySaved = data.some(
+				(item) => item.name === newCar.name && item.model === newCar.model
+			);
+
+			if (alreadySaved) {
+				toast.show('Ride already saved', {
+					duration: 2000,
+				});
+				return;
+			}
+
+			const { error: uploadCarError } = await supabase.from('book-later').insert(newCar);
+
+			if (uploadCarError) {
+				console.log(uploadCarError, 'book ride failed');
+				return;
+			}
+
+			toast.show('Ride saved to book later', {
+				duration: 2000,
+			});
+		} catch (error) {
+			console.log(error);
 		}
 	};
 
@@ -191,7 +211,7 @@ const CarDetails = () => {
 						</View>
 					</View>
 					<View className="flex-row gap-2 mt-7 mb-10">
-						<SecondaryBtn text="Book later" fn={bookeLater} additionalStyle="flex-1" />
+						<SecondaryBtn text="Book later" fn={bookLater} additionalStyle="flex-1" />
 						<PrimaryBtn text="Ride Now" fn={bookRide} additionalStyle="flex-1" />
 					</View>
 				</ScrollView>

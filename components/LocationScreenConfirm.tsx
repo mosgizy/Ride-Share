@@ -31,7 +31,7 @@ const LocationScreenConfirm = () => {
 							<Text className="text-tertiary-100 text-xl font-medium mt-6 border-b border-tertiary-900 pb-3 px-5">
 								Your driver is coming in 3:35
 							</Text>
-							<View className="px-5 py-4 flex-row justify-between items-center border-b border-tertiary-900">
+							<View className="px-5 py-6 flex-row justify-between items-center border-b border-tertiary-900">
 								<View className="flex-row items-center gap-3">
 									<Image
 										source={images.profile}
@@ -50,12 +50,12 @@ const LocationScreenConfirm = () => {
 										</View>
 										<View className="flex-row gap-1">
 											<Image source={icons.star} resizeMode="contain" className="w-3 h-3" />
-											<Text className="text-tertiary-400 text-[10px]">800m (5mins away)</Text>
+											<Text className="text-tertiary-400 text-[10px]">4.9 (531 reviews)</Text>
 										</View>
 									</View>
 								</View>
 								<Image
-									source={bookedCar?.image}
+									source={{ uri: bookedCar?.image }}
 									resizeMode="contain"
 									className="w-[93px] h-[54px]"
 								/>

@@ -1,7 +1,9 @@
 import { icons } from '@/constants';
 import { CarInfo } from '@/lib/interface';
-import useRentStore from '@/store/rentStore';
+import { supabase } from '@/lib/supabase';
+import useAuhStore from '@/store/authStore';
 import { router } from 'expo-router';
+import { useToast } from 'expo-toast';
 import { useState } from 'react';
 import { Image, Text, View } from 'react-native';
 import PrimaryBtn from './PrimaryBtn';
@@ -9,16 +11,73 @@ import SecondaryBtn from './SecondayBtn';
 
 const CarProfile = ({ car }: { car: CarInfo }) => {
 	const [viewCar, setViewCar] = useState(false);
-	const { setBookLater } = useRentStore();
+	const { profile } = useAuhStore();
+	const toast = useToast();
 
 	const { name, distance, image } = car;
 
 	const info = `${car.gear_type} | ${car.capacity} | ${car.fuel_type}`;
 
-	const bookLater = () => {
-		setBookLater(car);
-		setViewCar(false);
+	const newCar = {
+		email: profile.email,
+		name: car?.name,
+		model: car?.model,
+		capacity: car?.capacity,
+		color: car?.color,
+		fuel_type: car?.fuel_type,
+		gear_type: car?.gear_type,
+		distance: car?.distance,
+		rating: car?.rating,
+		reviews: car?.reviews,
+		max_power: car?.max_power,
+		zero_to_sixty: car?.zero_to_sixty,
+		tank_size: car?.tank_size,
+		max_speed: car?.max_speed,
+		image: car?.image,
+		car_image: car?.car_image,
 	};
+
+	const bookLater = async () => {
+		try {
+			const { data, error } = await supabase
+				.from('book-later')
+				.select('*')
+				.eq('email', profile.email);
+
+			if (!data && error) {
+				console.log(error);
+
+				return;
+			}
+
+			const alreadySaved = data.some((item) => item.name === car.name && item.model === car.model);
+
+			if (alreadySaved) {
+				toast.show('Ride already saved', {
+					duration: 2000,
+				});
+				return;
+			}
+
+			const { error: uploadCarError } = await supabase.from('book-later').insert(newCar);
+
+			if (uploadCarError) {
+				console.log(uploadCarError, 'book ride failed');
+				return;
+			}
+
+			toast.show('Ride saved to book later', {
+				duration: 2000,
+			});
+			setViewCar(false);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	// const bookLater = () => {
+	// 	setBookLater(car);
+	// };
 
 	return (
 		<View className="bg-primary/15 rounded-lg border border-primary px-3 py-4">

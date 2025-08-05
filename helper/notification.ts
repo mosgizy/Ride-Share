@@ -40,7 +40,7 @@ export function setupNotificationChannel() {
         shouldPlaySound: true,
         shouldSetBadge: false,
         shouldShowBanner: true,
-        shouldShowList:false,
+        shouldShowList:true,
       }),
     });
   }
