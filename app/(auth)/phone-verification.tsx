@@ -41,7 +41,7 @@ const PhoneVerification = () => {
 			return;
 		}
 		setIsLoggedIn(true);
-		router.push(previousRoute === 'register' ? '/set-password' : '/home');
+		router.replace(previousRoute === 'register' ? '/set-password' : '/home');
 	};
 
 	const userData = useGetUserData();

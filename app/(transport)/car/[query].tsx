@@ -3,11 +3,11 @@ import LoadingPage from '@/components/LoadingPage';
 import PrimaryBtn from '@/components/PrimaryBtn';
 import SecondaryBtn from '@/components/SecondayBtn';
 import { icons } from '@/constants';
+import { insertToSupabase } from '@/helper/insertToSupabase';
 import { sendPushNotification } from '@/helper/sendNotification';
 import { CarInfo } from '@/lib/interface';
 import { supabase } from '@/lib/supabase';
 import useAuhStore from '@/store/authStore';
-import useRentStore from '@/store/rentStore';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useToast } from 'expo-toast';
 import { useEffect, useState } from 'react';
@@ -16,7 +16,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 const CarDetails = () => {
 	const { query } = useLocalSearchParams();
-	const { setBooked, setBookLater, bookedCar } = useRentStore();
 	const [car, setCar] = useState<CarInfo>();
 	const [loading, setLoading] = useState(false);
 	const { profile, notificationToken } = useAuhStore();
@@ -66,12 +65,10 @@ const CarDetails = () => {
 
 		if (Array.isArray(data) && data.length > 0) {
 			await supabase.from('booked').delete().eq('email', profile.email);
-			console.log(data);
 
-			// toast.show('You already booked a ride', {
-			// 	duration: 2000,
-			// });
-			return;
+			toast.show('overwriting previous ride booked', {
+				duration: 2000,
+			});
 		}
 
 		const { error: uploadCarError } = await supabase.from('booked').insert(newCar);
@@ -83,14 +80,24 @@ const CarDetails = () => {
 
 		const info = {
 			title: 'You just booked a ride!',
-			body: `Thanks for booking ${car?.name}`,
+			body: `Thanks for booking ${car?.name} ${car?.model}`,
 			sound: 'default',
 			data: { screen: 'Booked Car', carId: car?.id },
 		};
 
+		const { error: insertError } = await insertToSupabase({
+			type: 'notifications',
+			data: { title: info.title, description: info.body, email: profile.email },
+		});
+
+		if (insertError) {
+			console.log(insertError);
+			return;
+		}
+
 		sendPushNotification(notificationToken, info);
 		toast.show('Ride booked successfully', {
-			duration: 2000,
+			duration: 2500,
 		});
 
 		router.push('/(transport)/request?type=Request for rent');
@@ -105,7 +112,6 @@ const CarDetails = () => {
 
 			if (!data && error) {
 				console.log(error);
-
 				return;
 			}
 

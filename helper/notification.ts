@@ -3,7 +3,7 @@ import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 
-export async function registerForPushNotificationsAsync() {
+export const registerForPushNotificationsAsync = async () => {
   if (!Device.isDevice) {
     alert('Must use physical device for push notifications');
     return null;
@@ -26,7 +26,6 @@ export async function registerForPushNotificationsAsync() {
   return tokenData.data;
 }
 
-// Optional: Android channel
 export function setupNotificationChannel() {
   if (Platform.OS === 'android') {
     Notifications.setNotificationChannelAsync('default', {

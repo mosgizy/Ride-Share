@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 
 interface notificationI {
-	bg: string;
+	bg: boolean;
 	type: string;
 	text: string;
 	time: string;

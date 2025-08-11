@@ -1,4 +1,6 @@
 import { icons, images } from '@/constants';
+import { getOrCreateConversation } from '@/helper/getorCreateConversation';
+import useChatStore from '@/store/chatStore';
 import useRentStore from '@/store/rentStore';
 import { router } from 'expo-router';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
@@ -8,6 +10,8 @@ import SlideModal from './SlideModal';
 
 const LocationScreenConfirm = () => {
 	const { setDriverStatus, driverStatus, bookedCar } = useRentStore();
+	const { setConversationInfo } = useChatStore();
+
 	const onClose = () => {
 		setDriverStatus(false);
 	};
@@ -15,6 +19,21 @@ const LocationScreenConfirm = () => {
 	const handleContinue = () => {
 		setDriverStatus(false);
 		router.push('/(transport)/request?type=payment');
+	};
+
+	const message = async () => {
+		try {
+			const conversation = await getOrCreateConversation('f06339bb-c408-41eb-b95c-7d1fe9e9a64b');
+			if (!conversation) {
+				console.log('error starting a conversation');
+				return;
+			}
+
+			setConversationInfo(conversation);
+			router.push('/(chat)/messaging');
+		} catch (error) {
+			console.error(error);
+		}
 	};
 
 	return (
@@ -79,11 +98,7 @@ const LocationScreenConfirm = () => {
 									fn={() => router.push('/(chat)/calling')}
 									additionalStyle="flex-1"
 								/>
-								<PrimaryBtn
-									text="Message"
-									fn={() => router.push('/(chat)/messaging')}
-									additionalStyle="flex-1"
-								/>
+								<PrimaryBtn text="Message" fn={message} additionalStyle="flex-1" />
 							</View>
 							<View className="px-5">
 								<PrimaryBtn
