@@ -3,7 +3,6 @@ import ModalTemplate from '@/components/Modal';
 import PrimaryBtn from '@/components/PrimaryBtn';
 import { icons } from '@/constants';
 import { router } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -58,7 +57,6 @@ const Complain = () => {
 					</>
 				</ModalTemplate>
 			</View>
-			<StatusBar style="dark" />
 		</SafeAreaView>
 	);
 };

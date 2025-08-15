@@ -54,6 +54,11 @@ const sideBarItems = [
 		text: 'complain',
 	},
 	{
+		url: '/(sidebar)/messages',
+		icon: icons.messages,
+		text: 'messages',
+	},
+	{
 		url: '/(sidebar)/referral',
 		icon: icons.referral,
 		text: 'referral',

@@ -27,4 +27,6 @@ interface ConversationInfoI{
   id: string;
   sender: string;
   reciever: string;
+  sender_email: string;
+  reciever_email: string;
 }

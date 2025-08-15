@@ -8,9 +8,8 @@ import { supabase } from '@/lib/supabase';
 import useAuhStore from '@/store/authStore';
 import useMapStore from '@/store/store';
 import { router } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useState } from 'react';
-import { Alert, Image, Modal, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Modal, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Profile = () => {
@@ -224,7 +223,6 @@ const Profile = () => {
 				</View>
 			</View>
 			<SecondaryBtn fn={logout} text="Logout" additionalStyle="mt-auto" />
-			<StatusBar style="dark" />
 		</SafeAreaView>
 	);
 };

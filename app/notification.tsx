@@ -10,48 +10,6 @@ const Notifications = () => {
 	const { profile } = useAuhStore();
 	const [notifications, setNotifications] = useState<any[] | null>();
 	const [refreshing, setRefreshing] = useState(false);
-	const [currentDay, setCurrentDay] = useState('');
-	// const [previousDay, setPreviousDay] = useState('');
-
-	// const checkDate = (createdAt: string) => {
-	// 	const dateCreated = new Date(createdAt);
-	// 	const today = new Date();
-	// 	const yesterday = new Date();
-	// 	yesterday.setDate(today.getDate() - 1);
-	// 	const date =
-	// 		dateCreated.toDateString() === today.toDateString()
-	// 			? 'today'
-	// 			: dateCreated.toDateString() === yesterday.toDateString()
-	// 			? 'yesterday'
-	// 			: dateCreated.toDateString();
-
-	// 	if (date === currentDay) {
-	// 		setCurrentDay('');
-	// 		return '';
-	// 	} else {
-	// 		setCurrentDay(date);
-	// 		return date;
-	// 	}
-	// };
-
-	// const itemList = useCallback(({ item, index }: any) => {
-	// 	const day = checkDate(item.created_at);
-	// 	console.log(day, 'day', item.created_at);
-
-	// 	return (
-	// 		<>
-	// 			{day && (
-	// 				<Text className="text-sm text-primary-400 font-medium capitalize mb-3">{currentDay}</Text>
-	// 			)}
-	// 			<Notification
-	// 				type={item.title}
-	// 				text={item.description}
-	// 				time={new Date(item.created_at).toLocaleTimeString()}
-	// 				bg={index % 2 !== 1}
-	// 			/>
-	// 		</>
-	// 	);
-	// }, []);
 
 	const itemList = ({ item, index }: any) => {
 		const dateCreated = new Date(item.created_at);

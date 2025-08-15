@@ -40,6 +40,7 @@ import logout from '../assets/icons/logout.png';
 import love from '../assets/icons/love.png';
 import marker from '../assets/icons/marker.png';
 import masterCard from '../assets/icons/master-card.png';
+import messages from '../assets/icons/messages.png';
 import meter from '../assets/icons/meter.png';
 import moreOptions from '../assets/icons/more-options.png';
 import netherland from '../assets/icons/netherland.png';
@@ -70,6 +71,7 @@ import wallet from '../assets/icons/wallet.png';
 import xMark from '../assets/icons/x-mark.png';
 
 export default {
+	messages,
 	chevRight,
 	netherland,
 	turkey,

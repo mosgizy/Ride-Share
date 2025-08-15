@@ -1,6 +1,5 @@
 import LiveLocationMap from '@/components/LiveLocation';
 import NavBar from '@/components/NavBar';
-import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Home = () => {
@@ -8,7 +7,6 @@ const Home = () => {
 		<SafeAreaView className="relative h-full px-5">
 			<NavBar noNotification />
 			<LiveLocationMap />
-			<StatusBar style="dark" />
 		</SafeAreaView>
 	);
 };

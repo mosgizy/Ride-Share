@@ -1,5 +1,4 @@
 import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 
 const LayoutSideBar = () => {
 	return (
@@ -16,8 +15,8 @@ const LayoutSideBar = () => {
 				<Stack.Screen name="contact-us" options={{ headerShown: false }} />
 				<Stack.Screen name="delete-account" options={{ headerShown: false }} />
 				<Stack.Screen name="help" options={{ headerShown: false }} />
+				<Stack.Screen name="messages" options={{ headerShown: false }} />
 			</Stack>
-			<StatusBar style="dark" />
 		</>
 	);
 };

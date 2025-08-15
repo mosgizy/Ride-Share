@@ -1,6 +1,6 @@
 import { supabase } from "@/lib/supabase";
 
-export const getOrCreateConversation = async (otherUserId: string) => {
+export const getOrCreateConversation = async (otherUserId: string, otherUserEmail:string) => {
   const { data: {user} } = await supabase.auth.getUser();
 
   if(!user) return
@@ -21,7 +21,7 @@ export const getOrCreateConversation = async (otherUserId: string) => {
   if (!conv) {
     const { data, error } = await supabase
       .from('conversations')
-      .insert({ sender,reciever  })
+      .insert({ sender,reciever,sender_email:user.email,receiver_email:otherUserEmail  })
       .select()
       .single();
     if (error) throw error;

@@ -1,8 +1,11 @@
 import { icons, images } from '@/constants';
 import { getOrCreateConversation } from '@/helper/getorCreateConversation';
+import { supabase } from '@/lib/supabase';
 import useChatStore from '@/store/chatStore';
 import useRentStore from '@/store/rentStore';
-import { router } from 'expo-router';
+import useMapStore from '@/store/store';
+import { RelativePathString, router } from 'expo-router';
+import { useEffect, useState } from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import PrimaryBtn from './PrimaryBtn';
 import SecondaryBtn from './SecondayBtn';
@@ -11,6 +14,8 @@ import SlideModal from './SlideModal';
 const LocationScreenConfirm = () => {
 	const { setDriverStatus, driverStatus, bookedCar } = useRentStore();
 	const { setConversationInfo } = useChatStore();
+	const [driver, setDriver] = useState();
+	const { userLocation } = useMapStore();
 
 	const onClose = () => {
 		setDriverStatus(false);
@@ -21,20 +26,30 @@ const LocationScreenConfirm = () => {
 		router.push('/(transport)/request?type=payment');
 	};
 
+	const getClosestAvailableDriver = async () => {
+		const { data } = await supabase.from('available_drivers').select('*');
+		setDriver(data[0]);
+		// console.log(data);
+	};
+
 	const message = async () => {
 		try {
-			const conversation = await getOrCreateConversation('f06339bb-c408-41eb-b95c-7d1fe9e9a64b');
+			const conversation = await getOrCreateConversation(driver?.user_id, driver?.email);
 			if (!conversation) {
 				console.log('error starting a conversation');
 				return;
 			}
 
 			setConversationInfo(conversation);
-			router.push('/(chat)/messaging');
+			router.push(`/(chat)/message/${conversation.id}` as RelativePathString);
 		} catch (error) {
 			console.error(error);
 		}
 	};
+
+	useEffect(() => {
+		getClosestAvailableDriver();
+	}, []);
 
 	return (
 		<>
@@ -42,7 +57,7 @@ const LocationScreenConfirm = () => {
 				<View className="absolute inset-0 justify-end">
 					<TouchableOpacity
 						className="absolute inset-0 z-50 transistion-all"
-						onPress={onClose}
+						// onPress={onClose}
 						activeOpacity={1}
 					></TouchableOpacity>
 					<SlideModal status={driverStatus} onClose={onClose}>
@@ -58,18 +73,22 @@ const LocationScreenConfirm = () => {
 										className="w-[54px] h-[59px]"
 									/>
 									<View>
-										<Text className="text-tertiary-100 font-medium">Sergio Ramasis</Text>
+										<Text className="text-tertiary-100 font-medium capitalize">{driver?.name}</Text>
 										<View className="flex-row gap-1 py-1">
 											<Image
 												source={icons.targetPointerSolid}
 												resizeMode="contain"
 												className="w-4 h-4"
 											/>
-											<Text className="text-tertiary-400 text-[10px]">800m (5mins away)</Text>
+											<Text className="text-tertiary-400 text-[10px]">
+												{driver?.distance_from_client} (5mins away)
+											</Text>
 										</View>
 										<View className="flex-row gap-1">
 											<Image source={icons.star} resizeMode="contain" className="w-3 h-3" />
-											<Text className="text-tertiary-400 text-[10px]">4.9 (531 reviews)</Text>
+											<Text className="text-tertiary-400 text-[10px]">
+												{driver?.rating} ({driver?.reviews} reviews)
+											</Text>
 										</View>
 									</View>
 								</View>

@@ -1,5 +1,4 @@
 import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 
 const Onboarding = () => {
 	return (
@@ -9,7 +8,6 @@ const Onboarding = () => {
 				<Stack.Screen name="time" options={{ headerShown: false }} />
 				<Stack.Screen name="book" options={{ headerShown: false }} />
 			</Stack>
-			<StatusBar style="dark" />
 		</>
 	);
 };

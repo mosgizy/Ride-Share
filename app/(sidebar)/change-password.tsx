@@ -1,7 +1,6 @@
 import GoBack from '@/components/GoBack';
 import PrimaryBtn from '@/components/PrimaryBtn';
 import { icons } from '@/constants';
-import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import { Image, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -71,7 +70,6 @@ const ChangePassword = () => {
 			<View className="px-4 mt-10">
 				<PrimaryBtn text="Save" fn={() => {}} />
 			</View>
-			<StatusBar style="dark" />
 		</SafeAreaView>
 	);
 };

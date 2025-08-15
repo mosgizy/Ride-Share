@@ -1,5 +1,4 @@
 import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
 
 const Transport = () => {
 	return (
@@ -11,7 +10,6 @@ const Transport = () => {
 				<Stack.Screen name="request" options={{ headerShown: false }} />
 				<Stack.Screen name="success" options={{ headerShown: false }} />
 			</Stack>
-			<StatusBar style="dark" />
 		</>
 	);
 };
