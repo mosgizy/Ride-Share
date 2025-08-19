@@ -33,8 +33,6 @@ const Messages = () => {
 					const receiver =
 						user.email === chat.sender_email ? chat.receiver_email : chat.sender_email;
 
-					console.log(chat, 'chat');
-
 					const { data: users, error } = await supabase
 						.from('users')
 						.select('*')
