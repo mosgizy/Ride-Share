@@ -1,4 +1,5 @@
 import GoBack from '@/components/GoBack';
+import LoadingPage from '@/components/LoadingPage';
 import { images } from '@/constants';
 import { supabase } from '@/lib/supabase';
 import { RelativePathString, router } from 'expo-router';
@@ -9,8 +10,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 const Messages = () => {
 	const [chatList, setChatList] = useState<any[]>([]);
 	const [loading, setLoading] = useState(false);
-
-	// console.log(chatList);
 
 	const fetchMyChats = async () => {
 		setLoading(true);
@@ -31,29 +30,32 @@ const Messages = () => {
 
 			const contacts = await Promise.all(
 				data?.map(async (chat) => {
-					const { data: user, error } = await supabase
+					const receiver =
+						user.email === chat.sender_email ? chat.receiver_email : chat.sender_email;
+
+					console.log(chat, 'chat');
+
+					const { data: users, error } = await supabase
 						.from('users')
 						.select('*')
-						.eq('email', chat.receiver_email)
+						.eq('email', receiver)
 						.single();
 
 					if (error) {
-						console.error(`Error fetching user for ${chat.receiver_email}:`, error);
+						console.error(`Error fetching user for ${receiver}:`, error);
 						return null;
 					}
 
 					const newUser = {
 						id: chat.id,
-						name: user.name,
-						avatar_url: user.avatar_url,
-						email: user.email,
+						name: users.name,
+						avatar_url: users.avatar_url,
+						email: users.email,
 					};
 
 					return newUser;
 				}) || []
 			);
-
-			// console.log(contacts);
 
 			setLoading(false);
 			setChatList(contacts);
@@ -74,38 +76,44 @@ const Messages = () => {
 	return (
 		<SafeAreaView className="h-full px-5">
 			<GoBack title="Messages" />
-			<FlatList
-				data={chatList}
-				keyExtractor={(item) => item.id}
-				showsVerticalScrollIndicator={false}
-				renderItem={({ item }) => {
-					return (
-						<TouchableOpacity
-							onPress={() => clickMessage(item.id)}
-							className="w-full flex-row items-center gap-2 mb-4"
-						>
-							<View className="flex-row items-center gap-2">
-								<View>
-									<Image
-										source={!item.avatar_url ? images.profile : { uri: item.avatar_url }}
-										resizeMode="contain"
-										className="w-14 h-14 rounded-full"
-									/>
+			{loading ? (
+				<LoadingPage />
+			) : (
+				<FlatList
+					data={chatList}
+					keyExtractor={(item) => item.id}
+					showsVerticalScrollIndicator={false}
+					renderItem={({ item }) => {
+						return (
+							<TouchableOpacity
+								onPress={() => clickMessage(item.id)}
+								className="w-full flex-row items-center gap-2 mb-4"
+							>
+								<View className="flex-row items-center gap-2">
+									<View>
+										<Image
+											source={!item.avatar_url ? images.profile : { uri: item.avatar_url }}
+											resizeMode="contain"
+											className="w-14 h-14 rounded-full"
+										/>
+									</View>
+									<View>
+										<Text className="text-primary text-lg">{item.name}</Text>
+										<Text>{item.email}</Text>
+									</View>
 								</View>
-								<View>
-									<Text className="text-primary text-lg">{item.name}</Text>
-									<Text>{item.email}</Text>
-								</View>
-							</View>
-						</TouchableOpacity>
-					);
-				}}
-				ListEmptyComponent={() => (
-					<View>
-						<Text className="text-xl text-primary-100 text-center font-semibold">No Messages</Text>
-					</View>
-				)}
-			/>
+							</TouchableOpacity>
+						);
+					}}
+					ListEmptyComponent={() => (
+						<View>
+							<Text className="text-xl text-primary-100 text-center font-semibold">
+								No Messages
+							</Text>
+						</View>
+					)}
+				/>
+			)}
 		</SafeAreaView>
 	);
 };

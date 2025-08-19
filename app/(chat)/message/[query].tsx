@@ -17,6 +17,7 @@ const Message = () => {
 	const [text, setText] = useState('');
 	const { conversationInfo, setConversationInfo } = useChatStore();
 	const [user, setUser] = useState<any>();
+	const [loading, setLoading] = useState(false);
 	const flatListRef = useRef<FlatList>(null);
 
 	const getAllMessages = async () => {
@@ -56,7 +57,6 @@ const Message = () => {
 				setConversationInfo(data);
 			}
 
-			// getAllMessages();
 			setText('');
 		} catch (error) {
 			console.error(error);
@@ -75,13 +75,10 @@ const Message = () => {
 					filter: `conversation_id=eq.${query}`,
 				},
 				(payload) => {
-					// console.log(payload.new, 'payload');
 					setMessages((prev: any) => [...prev, payload.new]);
 				}
 			)
 			.subscribe();
-
-		// console.log('omo sey this thing no go work sha');
 
 		return () => {
 			supabase.removeChannel(channel);
@@ -120,6 +117,7 @@ const Message = () => {
 				data={messages}
 				keyExtractor={(item) => item.id}
 				showsVerticalScrollIndicator={false}
+				onEndReachedThreshold={0.5}
 				renderItem={({ item }) => {
 					// const date = new Date(item.inserted_at).toDateString();
 					const time = new Date(item.inserted_at).toLocaleTimeString();
@@ -134,6 +132,7 @@ const Message = () => {
 						</>
 					);
 				}}
+				// inverted
 			/>
 			<View className="flex-row gap-2 items-center mb-4">
 				<TouchableOpacity activeOpacity={0.75}>

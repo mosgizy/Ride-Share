@@ -9,7 +9,8 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.hasterisk.rideshare"
     },
     "android": {
       "versionCode": 1,
@@ -23,8 +24,8 @@
         "ACCESS_FINE_LOCATION"
       ],
       "package": "com.hasterisk.rideshare",
-      "config":{
-        "googleMaps":{
+      "config": {
+        "googleMaps": {
           "apiKey": "process.env.EXPO_PUBLIC_MAP_API_KEY"
         }
       }
